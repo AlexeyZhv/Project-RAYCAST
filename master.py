@@ -6,10 +6,12 @@ from weapons import *
 from Global import *
 from Player import *
 from Beam import *
+from Sprites import *
 
 from random import random
 import time
 
+oh_no = Sprite([896, 896], ohno, [48, 48], 9)
 Shotgun = Weapon()
 
 obs = Player([104, 104], 3 * np.pi / 2, 200, 5)
@@ -250,8 +252,8 @@ while not finished:
         if Shotgun.state == 1:
             for i in range(5):
                 BEAMS.append(Beam(
-                    Level, [obs.coord[0] + 5 * np.cos(obs.ang), obs.coord[1] + 5 * np.sin(obs.ang)],
-                    obs.ang + (0.5 - random()) * 0.3, 300, 1300, 500, 30
+                    Level, [obs.coord[0] + 15 * np.cos(obs.ang), obs.coord[1] + 15 * np.sin(obs.ang)],
+                    obs.ang + (0.5 - random()) * 0.3, 300, 3, 500, 10
                 ))
     if MODE == "Map":
         pg.draw.circle(mapscreen, pcol, obs.coord * mapscale, 5)
@@ -265,7 +267,9 @@ while not finished:
             BEAMS.remove(beam)
             del beam
 
+    #testing drawings
     if MODE == "3D":
+        oh_no.draw(Level, obs, screen)
         Shotgun.draw(screen, shooting)
 
     pg.display.update()

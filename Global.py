@@ -18,6 +18,7 @@ wall_height = 48
 len0 = len(TEXTURES)
 colors = ["BLACK", "WHITE", "GREEN", "RED", "RED", "WHITE", "BLUE", "GREEN"]
 BEAMS = []
+ohno = pg.image.load("./sprites/ohno.png")
 
 Level = [  # Square only
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1],

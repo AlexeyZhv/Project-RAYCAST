@@ -48,17 +48,17 @@ class Beam:
             if np.abs(offset1) < fov_rad / 2 + 1 and np.abs(offset2) < fov_rad / 2 + 1 and (
                     Visible[i] and Visible[i + 1]):
                 pg.draw.line(surface, "CYAN",
-                             [width / 2 + offset1 * scale, height / 2 + (self.height / Dist[i]) / np.cos(offset1)],
-                             [width / 2 + offset2 * scale, height / 2 + (self.height / Dist[i + 1]) / np.cos(offset2)],
+                             [width / 2 + offset1 * scale, height / 2 + (self.height * scale / Dist[i]) / np.cos(offset1)],
+                             [width / 2 + offset2 * scale, height / 2 + (self.height * scale / Dist[i + 1]) / np.cos(offset2)],
                              int(self.thickness * 2 / (Dist[i] + Dist[i + 1]) / np.cos(offset1 / 2 + offset2 / 2) / (
                                          self.timer * 10 + 1)) + 1)
                 if i == 0:
                     pg.draw.circle(surface, "CYAN", [width / 2 + offset1 * scale,
-                                                     height / 2 + (self.height / Dist[0]) / np.cos(offset1)],
+                                                     height / 2 + (self.height * scale / Dist[0]) / np.cos(offset1)],
                                    int(self.thickness / Dist[0] / 2 / np.cos(offset1) / (self.timer * 10 + 1)) + 1)
                 elif i == self.qual - 2:
                     pg.draw.circle(surface, "CYAN", [width / 2 + offset2 * scale,
-                                                     height / 2 + (self.height / Dist[self.qual - 1]) / np.cos(
+                                                     height / 2 + (self.height * scale / Dist[self.qual - 1]) / np.cos(
                                                          offset2)],
                                    int(self.thickness / Dist[self.qual - 1] / 2 / np.cos(offset2) / (
                                                self.timer * 10 + 1)) + 1)
