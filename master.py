@@ -16,7 +16,7 @@ from random import random
 oh_no = Sprite([896, 896], ohno, [48, 48], 9, 10)
 Shotgun = Weapon()
 
-obs = Player([104, 104], 3 * np.pi / 2, 200, 5)
+obs = Player([104, 104], 3 * np.pi / 2, 200, 3)
 
 def new_texture(size):
     a = []
@@ -82,67 +82,76 @@ while not Global.finished:
         k = i
         m = j
 
-    # Drawing the wall in editor
+    # Interaction with walls
     if (is_wall > 0) and interacting and not finished:
-        MODE = "Draw"
-        tex = TEXTURES[is_wall]
-        if is_wall < len0:
-            texture = []
-            for j in tex:
-                row = []
-                for i in j:
-                    row.append(i)
-                texture.append(row)
+        #Special Cases
+
+        #Door
+        if is_wall == 2:
+            Level[m][k] = 0
+        
+
+        #Drawing in editor
         else:
-            texture = tex
-        tex_scale = height / len(texture)
-        COLOR = 0
-        while MODE == "Draw":
-            chcolor = False
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    finished = True
-                    mode = "3D"
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_TAB:
-                        COLOR += 1
-                        if COLOR >= len(COLORS):
-                            COLOR = 0
-                    if event.key == pg.K_e:
-                        MODE = "3D"
+            MODE = "Draw"
+            tex = TEXTURES[is_wall]
+            if is_wall < len0:
+                texture = []
+                for j in tex:
+                    row = []
+                    for i in j:
+                        row.append(i)
+                    texture.append(row)
+            else:
+                texture = tex
+            tex_scale = height / len(texture)
+            COLOR = 0
+            while MODE == "Draw":
+                chcolor = False
+                for event in pg.event.get():
+                    if event.type == pg.QUIT:
+                        finished = True
+                        mode = "3D"
+                    if event.type == pg.KEYDOWN:
+                        if event.key == pg.K_TAB:
+                            COLOR += 1
+                            if COLOR >= len(COLORS):
+                                COLOR = 0
+                        if event.key == pg.K_e:
+                            MODE = "3D"
 
-            left, middle, right = pg.mouse.get_pressed()
-            if left:
-                chcolor = True
-            x1, y = pg.mouse.get_pos()
-            x = x1 - (width / 2 - height / 2)
+                left, middle, right = pg.mouse.get_pressed()
+                if left:
+                    chcolor = True
+                x1, y = pg.mouse.get_pos()
+                x = x1 - (width / 2 - height / 2)
 
-            if chcolor:
-                i, j = int(x // tex_scale), int(y // tex_scale)
-                if i < 0:
-                    i = 0
-                if j < 0:
-                    j = 0
-                if i > len(texture) - 1:
-                    i = len(texture) - 1
-                if j > len(texture) - 1:
-                    j = len(texture) - 1
-                texture[j][i] = COLOR
+                if chcolor:
+                    i, j = int(x // tex_scale), int(y // tex_scale)
+                    if i < 0:
+                        i = 0
+                    if j < 0:
+                        j = 0
+                    if i > len(texture) - 1:
+                        i = len(texture) - 1
+                    if j > len(texture) - 1:
+                        j = len(texture) - 1
+                    texture[j][i] = COLOR
 
-            clock.tick(FPS)
-            screen.fill("#444444")
-            drawscreen.fill("#444444")
-            for i in range(len(texture)):
-                for j in range(len(texture[0])):
-                    pg.draw.rect(drawscreen, COLORS[texture[j][i]],
-                                 [[tex_scale * i + 1, tex_scale * j + 1], [tex_scale - 2, tex_scale - 2]])
-            screen.blit(drawscreen, [(width - height) / 2, 0])
-            pg.draw.circle(screen, "GREY", [x1, y], 7)
-            pg.draw.circle(screen, COLORS[COLOR], [x1, y], 6)
-            pg.display.update()
-        if is_wall < len0:
-            TEXTURES.append(texture)
-        Level[m][k] = TEXTURES.index(texture)
+                clock.tick(FPS)
+                screen.fill("#444444")
+                drawscreen.fill("#444444")
+                for i in range(len(texture)):
+                    for j in range(len(texture[0])):
+                        pg.draw.rect(drawscreen, COLORS[texture[j][i]],
+                                     [[tex_scale * i + 1, tex_scale * j + 1], [tex_scale - 2, tex_scale - 2]])
+                screen.blit(drawscreen, [(width - height) / 2, 0])
+                pg.draw.circle(screen, "GREY", [x1, y], 7)
+                pg.draw.circle(screen, COLORS[COLOR], [x1, y], 6)
+                pg.display.update()
+            if is_wall < len0:
+                TEXTURES.append(texture)
+            Level[m][k] = TEXTURES.index(texture)
 
     pcol = "GREEN"
     alpha, move = move_controls(obs.ang)
