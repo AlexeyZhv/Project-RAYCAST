@@ -4,9 +4,10 @@ from ray_module import *
 from Global import *
 
 class Sprite:
-    def __init__(self, coord, texture, size, qual):
+    def __init__(self, coord, texture, size, qual, mindist):
         self.coord = np.array(coord)
         self.qual = qual
+        self.mindist = mindist
         self.size = np.array(size)
         #splitting image into columns
         step = texture.get_width() / (self.qual - 1)
@@ -15,14 +16,13 @@ class Sprite:
             temp_surface = pg.Surface((texture.get_width() / (self.qual - 1), texture.get_height()), pg.SRCALPHA)
             temp_surface.blit(texture, [- i * step, 0])
             self.columns.append(temp_surface)
-
     def draw(self, lmap, player, surface):
         dist = mag([self.coord[1] - player.coord[1], self.coord[0] - player.coord[0]])
         step = self.size[0] / (self.qual - 1)
         offsets = []
         dists = []
         visible = []
-        if dist > 20:
+        if dist > self.mindist:
             #calculating angles
             ang = np.arctan2(self.coord[1] - player.coord[1], self.coord[0] - player.coord[0])
             angsize = self.size / dist * scale
@@ -52,3 +52,18 @@ class Sprite:
                         wid = abs(offsets[i] - offsets[i + 1])
                         if visible[i] and visible[i + 1]:
                             surface.blit(pg.transform.scale(self.columns[i], [wid * scale + 1, angsize[1]]), [offsets[i + 1] * scale + width / 2, height / 2 - angsize[1] / 2])
+
+class Lamp:
+    def __init__(self, coord):
+        self = Sprite(coord, pg.image.load("./sprites/lamp.png"), [48, 48], 4, 30)
+
+
+
+
+
+
+LAMPS = [
+    Sprite([128, 128], pg.image.load("./sprites/lamp.png"),            [48, 48], 6, 40),
+    Sprite([128, 256], pg.image.load("./sprites/lamp.png"),            [48, 48], 6, 40),
+    Sprite([256 + 128, 256 + 64], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 40)
+]

@@ -4,14 +4,16 @@ from textures import *
 from ray_module import *
 from weapons import *
 from Global import *
+import Global
 from Player import *
 from Beam import *
 from Sprites import *
+from Input import *
+from Widgets import *
 
 from random import random
-import time
 
-oh_no = Sprite([896, 896], ohno, [48, 48], 9)
+oh_no = Sprite([896, 896], ohno, [48, 48], 9, 10)
 Shotgun = Weapon()
 
 obs = Player([104, 104], 3 * np.pi / 2, 200, 5)
@@ -25,54 +27,24 @@ def new_texture(size):
         a.append(b)
     return a
 
-
-def move_controls(alpha):
-    move = False
-    keys = pg.key.get_pressed()
-    if keys[pg.K_w] and keys[pg.K_d]:
-        alpha += (np.pi / 4)
-        move = True
-    elif keys[pg.K_d] and keys[pg.K_s]:
-        alpha += (3 * np.pi / 4)
-        move = True
-    elif keys[pg.K_s] and keys[pg.K_a]:
-        alpha += (5 * np.pi / 4)
-        move = True
-    elif keys[pg.K_a] and keys[pg.K_w]:
-        alpha += (7 * np.pi / 4)
-        move = True
-    elif keys[pg.K_w]:
-        alpha += (0)
-        move = True
-    elif keys[pg.K_d]:
-        alpha += (np.pi * 0.5)
-        move = True
-    elif keys[pg.K_s]:
-        alpha += (np.pi)
-        move = True
-    elif keys[pg.K_a]:
-        alpha += (np.pi * 1.5)
-        move = True
-    return alpha, move
-
-
 pg.init()
-clock = pg.time.Clock()
-finished = False
 pg.display.set_caption("RAYCASTER")
 font = pg.font.SysFont("comicsansms", 30)
 pg.mouse.set_visible(False)
-PAUSED = False
 
-while not finished:
-    todraw = False
+while not Global.finished:
+    interacting = False
     shooting = False
     clock.tick(FPS)
     fps_label = font.render(f"FPS: {int(clock.get_fps())}", True, "RED")
 
+    main_menu()
+    pause_menu()
+
+    #Checking main controls
     for event in pg.event.get():
         if event.type == pg.QUIT:
-            finished = True
+            Global.finished = True
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_TAB:
                 if MODE == "3D":
@@ -80,19 +52,17 @@ while not finished:
                 else:
                     MODE = "3D"
             if event.key == pg.K_e:
-                todraw = True
+                interacting = True
             if event.key == pg.K_ESCAPE:
-                PAUSED = True
-        if event.type == pg.MOUSEBUTTONDOWN:
-            left, middle, right = pg.mouse.get_pressed()
-            if left:
+                Global.PAUSED = True
+            if event.key == pg.K_SPACE:
                 shooting = True
 
     # check if there is a wall in front of the player
     i_w = 0
     j_w = 0
     is_wall = False
-    if todraw:
+    if interacting:
         if obs.ang < np.pi / 4 or obs.ang > 7 * np.pi / 4:
             i = int(obs.coord[0] // 64) + 1
             j = int(obs.coord[1] // 64)
@@ -113,7 +83,7 @@ while not finished:
         m = j
 
     # Drawing the wall in editor
-    if (is_wall > 0) and todraw and not finished:
+    if (is_wall > 0) and interacting and not finished:
         MODE = "Draw"
         tex = TEXTURES[is_wall]
         if is_wall < len0:
@@ -174,18 +144,6 @@ while not finished:
             TEXTURES.append(texture)
         Level[m][k] = TEXTURES.index(texture)
 
-    while PAUSED:
-        clock.tick(FPS)
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                finished = True
-                PAUSED = False
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    PAUSED = False
-        screen.fill("#444444")
-        pg.display.update()
-
     pcol = "GREEN"
     alpha, move = move_controls(obs.ang)
     for i in range(lw):
@@ -202,15 +160,12 @@ while not finished:
     elif keys[pg.K_LEFT]:
         obs.rotate(-1)
 
-    if MODE == "3D":
-        obs.increase_ang(sen * pg.mouse.get_rel()[0] / scale)
-        pg.mouse.set_pos([width / 2, height / 2])
-
     if move:
         obs.move(alpha)
 
     if MODE == "3D":
-        screen.fill("#444444")
+        #Floor and ceil
+        screen.fill("#222222")
         pg.draw.rect(screen, "#666666", [[0, 0], [width, height / 2]])
     elif MODE == "Map":
         screen.fill("#444444")
@@ -269,7 +224,8 @@ while not finished:
 
     #testing drawings
     if MODE == "3D":
-        oh_no.draw(Level, obs, screen)
+        for lamp in LAMPS:
+            lamp.draw(Level, obs, screen)
         Shotgun.draw(screen, shooting)
 
     pg.display.update()

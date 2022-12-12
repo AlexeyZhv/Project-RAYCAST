@@ -9,7 +9,6 @@ mapscreen = pg.surface.Surface([height, height])
 drawscreen = pg.surface.Surface([height, height])
 FPS = 60
 FOV = 60
-sen = 2
 rays_number = 120
 fov_rad = FOV * np.pi / 180
 scale = width / fov_rad
@@ -18,7 +17,13 @@ wall_height = 48
 len0 = len(TEXTURES)
 colors = ["BLACK", "WHITE", "GREEN", "RED", "RED", "WHITE", "BLUE", "GREEN"]
 BEAMS = []
+PAUSED = False
+MENU = True
+
 ohno = pg.image.load("./sprites/ohno.png")
+
+finished = False
+clock = pg.time.Clock()
 
 Level = [  # Square only
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1],
