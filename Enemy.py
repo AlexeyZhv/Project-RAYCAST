@@ -42,7 +42,7 @@ class Enemy:
         self.vect = np.array([vect.x, vect.y])
         self.hor_vec = hor_vec
 
-        if vect.length != 0:
+        if vect.length > 30:
             vect = vect.multiply_by_number(self.spd / FPS / vect.length)
             vect_arr = np.array([vect.x, vect.y])
             self.pos = self.pos + vect_arr
