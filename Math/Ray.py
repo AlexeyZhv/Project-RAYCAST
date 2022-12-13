@@ -17,7 +17,8 @@ class Ray:
 
     def check_intersection_with_enemy(self, enemy):
         enemy_vector = Vector(enemy.pos - self.pos)
-        if self.vector.scalar_product(enemy_vector) > 0 and (enemy_vector.length ** 2 - enemy_vector.projection(self).length ** 2) < (enemy.size[0] / 2) ** 2 and enemy_vector.length <= self.length:
+        enemy_dist_sq = (enemy_vector.length ** 2 - enemy_vector.projection(self).length ** 2)
+        if self.vector.scalar_product(enemy_vector) > 0 and enemy_dist_sq < (enemy.size[0] / 2) ** 2 and enemy_vector.length <= self.length:
             return True
         else:
             return False

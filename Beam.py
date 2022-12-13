@@ -1,4 +1,5 @@
 from ray_module import *
+import Global
 from Global import *
 from Math.Ray import *
 
@@ -16,6 +17,7 @@ class Beam:
         if min(mag(hor_vec), mag(ver_vec)) < self.length:
             self.length = min(mag(hor_vec), mag(ver_vec))
         self.coord_2 = self.coord_1 + self.length * np.array([np.cos(self.ang), np.sin(self.ang)])
+        Global.BEAMS.append(self)
 
     def draw(self, player, surface):
         X = np.linspace(self.coord_1[0], self.coord_2[0], self.qual)

@@ -5,7 +5,7 @@ import ray_module as rm
 from ray_module import *
 from weapons import *
 from Global import *
-import Global
+import Global as g
 from Player import *
 from Beam import *
 from Sprites import *
@@ -14,13 +14,13 @@ from Widgets import *
 from Enemy import *
 
 from random import random
-
-oh_no = Sprite([896, 896], ohno, [48, 48], 9, 10)
 Shotgun = Weapon()
 
-obs = Player([104, 104], 3 * np.pi / 2, 200, 3)
+obs = Player([104, 104], 3 * np.pi / 2, 200, 2)
 
-ENEMIES.append(Enemy([896, 896], [48, 48]))
+Enemy([896, 896], [24, 48])
+Enemy([128, 896], [24, 48])
+Enemy([256, 896], [24, 48])
 
 def new_texture(size):
     a = []
@@ -31,24 +31,28 @@ def new_texture(size):
         a.append(b)
     return a
 
+def distance(enemy):
+    return mag(enemy.pos - obs.coord)
+
 pg.init()
 pg.display.set_caption("RAYCASTER")
 font = pg.font.SysFont("comicsansms", 30)
 pg.mouse.set_visible(False)
 
-while not Global.finished:
+while not g.finished:
     interacting = False
     shooting = False
     clock.tick(FPS)
     fps_label = font.render(f"FPS: {int(clock.get_fps())}", True, "RED")
 
+    settings_menu()
     main_menu()
     pause_menu()
 
     #Checking main controls
     for event in pg.event.get():
         if event.type == pg.QUIT:
-            Global.finished = True
+            g.finished = True
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_TAB:
                 if MODE == "3D":
@@ -58,7 +62,7 @@ while not Global.finished:
             if event.key == pg.K_e:
                 interacting = True
             if event.key == pg.K_ESCAPE:
-                Global.PAUSED = True
+                g.PAUSED = True
             if event.key == pg.K_SPACE:
                 shooting = True
 
@@ -193,7 +197,7 @@ while not Global.finished:
                                                         [64 * mapscale - 2, 64 * mapscale - 2]])
 
     # RAYCASTING
-    for offset in np.linspace(- fov_rad / 2, fov_rad / 2, rays_number):
+    for offset in np.linspace(- fov_rad / 2, fov_rad / 2, g.rays_number):
         angle = offset + obs.ang
         if angle > 2 * np.pi:
             angle -= 2 * np.pi
@@ -207,13 +211,13 @@ while not Global.finished:
                 pg.draw.line(mapscreen, "#004400", obs.coord * mapscale, (obs.coord + hor_vec) * mapscale)
             elif MODE == "3D":
                 texdraw(screen, hor_cell[1], TEXTURES[hor_cell[0]], wall_height / mag(hor_vec) / np.cos(offset) * scale,
-                        [(offset + fov_rad / 2) * scale, height / 2], int(width / rays_number) + 1, 0)
+                        [(offset + fov_rad / 2) * scale, height / 2], int(width / g.rays_number) + 1, 0)
         else:
             if MODE == "Map":
                 pg.draw.line(mapscreen, "#003300", obs.coord * mapscale, (obs.coord + ver_vec) * mapscale)
             elif MODE == "3D":
                 texdraw(screen, ver_cell[1], TEXTURES[ver_cell[0]], wall_height / mag(ver_vec) / np.cos(offset) * scale,
-                        [(offset + fov_rad / 2) * scale, height / 2], int(width / rays_number) + 1, 0.5)
+                        [(offset + fov_rad / 2) * scale, height / 2], int(width / g.rays_number) + 1, 0.5)
 
     # Code for the laser shotgun
     if MODE == "3D":
@@ -222,11 +226,13 @@ while not Global.finished:
                 ang = obs.ang + (0.5 - random()) * 0.3
                 beam = Beam(
                     Level, [obs.coord[0] + 15 * np.cos(obs.ang), obs.coord[1] + 15 * np.sin(obs.ang)],
-                    ang, 300, 3, 500, 10
+                    ang, 400, 3, 500, 10
                 )
                 BEAMS.append(beam)
                 ray = Ray([obs.coord[0] + 15 * np.cos(obs.ang), obs.coord[1] + 15 * np.sin(obs.ang)],
-                          Vector([0, 0]).set_by_angle(ang), beam.length, Level)
+                          Vector([0, 1]).set_by_angle(ang), beam.length, Level)
+    
+    ENEMIES.sort(key=distance, reverse=False)
     if MODE == "Map":
         pg.draw.circle(mapscreen, pcol, obs.coord * mapscale, 5)
         screen.blit(mapscreen, [0.5 * (width - height), 0])
@@ -250,11 +256,14 @@ while not Global.finished:
             del beam
 
     #testing drawings
+    ENEMIES.sort(key=distance, reverse=True)
     if MODE == "3D":
         for lamp in LAMPS:
             lamp.draw(Level, obs, screen)
         for enemy in ENEMIES:
             enemy.draw(Level, obs, screen)
+        for explosion in EXPLOSIONS:
+            explosion.draw(Level, obs, screen)
         Shotgun.draw(screen, shooting)
 
     pg.display.update()

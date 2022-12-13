@@ -1,6 +1,7 @@
 import numpy as np
 import pygame as pg
 from ray_module import *
+import Global as g
 from Global import *
 
 class Sprite:
@@ -104,6 +105,25 @@ class Fixed_sprite:
                             surface.blit(pg.transform.scale(self.columns[i], [wid * scale + 1, angsize[1]]), [offsets[i + 1] * scale + width / 2, height / 2 - angsize[1] / 2])
 
 
+
+boom = []
+for i in range(1, 15):
+    boom.append(pg.image.load(f"./sprites/expl/{i}.png"))
+
+class expl:
+    def __init__(self, coord):
+        self.phase = 0
+        self.coord = coord
+        g.EXPLOSIONS.append(self)
+    def draw(self, lmap, player, surface):
+        if self.phase <= 13:
+            temp_sprite = Sprite(self.coord, boom[self.phase], [32, 32], 2, 20)
+            temp_sprite.draw(lmap, player, surface)
+            del temp_sprite
+            self.phase += 1
+        else:
+            g.EXPLOSIONS.remove(self)
+            del self
 
 
 

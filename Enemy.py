@@ -8,17 +8,16 @@ from Player import *
 from Sprites import *
 from Beam import *
 
-
 class Enemy:
     def __init__(self, pos, size):
         self.pos = np.array(pos)
         self.size = size
-        self.sprite = Sprite(self.pos, ohno, self.size, 5, 20)
+        self.sprite = Sprite(self.pos, target, self.size, 5, 20)
         self.health = 1
         ENEMIES.append(self)
-
+    def __del__(self):
+        expl(self.pos)
     def draw(self, lmap, player, surface):
         self.sprite.draw(lmap, player, surface)
-
 
 
