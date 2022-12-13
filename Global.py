@@ -10,7 +10,7 @@ mapscreen = pg.surface.Surface([height, height])
 drawscreen = pg.surface.Surface([height, height])
 FPS = 60
 FOV = 60
-rays_number = 120
+rays_number = 40
 fov_rad = FOV * np.pi / 180
 scale = width / fov_rad
 wall_height = 48
@@ -20,6 +20,7 @@ colors = ["BLACK", "WHITE", "GREEN", "RED", "RED", "WHITE", "BLUE", "GREEN"]
 MODE = "3D"
 len0 = len(TEXTURES)
 BEAMS = []
+RAYS = []
 PAUSED = False
 MENU = True
 
@@ -49,6 +50,9 @@ Level = [  # Square only
 
 lw = len(Level)
 mapscale = (height / (lw * 64))
+
+#Enemies list
+ENEMIES = []
 
 # methods
 

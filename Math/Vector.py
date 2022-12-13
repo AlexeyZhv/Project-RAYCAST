@@ -1,13 +1,13 @@
 import numpy as np
 
-from project.Global import *
+from Global import *
 
 
 class Vector:
     def __init__(self, pos):
         self.x = np.array(pos)[0]
         self.y = np.array(pos)[1]
-        self.length = (x ** 2 + y ** 2) ** 0.5
+        self.length = (self.x ** 2 + self.y ** 2) ** 0.5
 
     def add(self, vector):
         return Vector([self.x + vector.x, self.y + vector.y])
@@ -18,8 +18,8 @@ class Vector:
     def scalar_product(self, vector):
         return self.x * vector.x + self.y * vector.y
 
-    def projection(self, axis):
-        return axis.vector.multiplyByNumber(self.scalar_product(axis.vector))
+    def projection(self, ray):
+        return ray.vector.multiply_by_number(self.scalar_product(ray.vector))
 
     def is_collinear(self, vector):
         return self.x * vector.y == self.y * vector.x
@@ -50,3 +50,8 @@ class Vector:
                 return a
             else:
                 return np.pi + a
+
+    def set_by_angle(self, angle):
+        self.x = np.cos(angle)
+        self.y = np.sin(angle)
+        return self

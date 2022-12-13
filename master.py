@@ -1,6 +1,7 @@
 import pygame as pg
 import numpy as np
 from textures import *
+import ray_module as rm
 from ray_module import *
 from weapons import *
 from Global import *
@@ -10,6 +11,7 @@ from Beam import *
 from Sprites import *
 from Input import *
 from Widgets import *
+from Enemy import *
 
 from random import random
 
@@ -17,6 +19,8 @@ oh_no = Sprite([896, 896], ohno, [48, 48], 9, 10)
 Shotgun = Weapon()
 
 obs = Player([104, 104], 3 * np.pi / 2, 200, 3)
+
+ENEMIES.append(Enemy([896, 896], [48, 48]))
 
 def new_texture(size):
     a = []
@@ -196,7 +200,7 @@ while not Global.finished:
         elif angle < 0:
             angle += 2 * np.pi
         # Calculating ray props
-        hor_vec, ver_vec, hor_cell, ver_cell = ray(Level, obs.coord, angle)
+        hor_vec, ver_vec, hor_cell, ver_cell = rm.ray(Level, obs.coord, angle)
         # Walls
         if mag(ver_vec) > mag(hor_vec):
             if MODE == "Map":
@@ -215,16 +219,30 @@ while not Global.finished:
     if MODE == "3D":
         if Shotgun.state == 1:
             for i in range(5):
-                BEAMS.append(Beam(
+                ang = obs.ang + (0.5 - random()) * 0.3
+                beam = Beam(
                     Level, [obs.coord[0] + 15 * np.cos(obs.ang), obs.coord[1] + 15 * np.sin(obs.ang)],
-                    obs.ang + (0.5 - random()) * 0.3, 300, 3, 500, 10
-                ))
+                    ang, 300, 3, 500, 10
+                )
+                BEAMS.append(beam)
+                ray = Ray([obs.coord[0] + 15 * np.cos(obs.ang), obs.coord[1] + 15 * np.sin(obs.ang)],
+                          Vector([0, 0]).set_by_angle(ang), beam.length, Level)
     if MODE == "Map":
         pg.draw.circle(mapscreen, pcol, obs.coord * mapscale, 5)
         screen.blit(mapscreen, [0.5 * (width - height), 0])
     elif MODE == "3D":
         for beam in BEAMS:
             beam.draw(obs, screen)
+        for enemy in ENEMIES:
+            for ray in RAYS:
+                if ray.check_intersection_with_enemy(enemy):
+                    enemy.health = enemy.health - 1
+                RAYS.remove(ray)
+                del ray
+            if enemy.health <= 0:
+                ENEMIES.remove(enemy)
+                del enemy
+
     screen.blit(fps_label, [20, 20])
     for beam in BEAMS:
         if beam.timer > 0.2:
@@ -235,6 +253,8 @@ while not Global.finished:
     if MODE == "3D":
         for lamp in LAMPS:
             lamp.draw(Level, obs, screen)
+        for enemy in ENEMIES:
+            enemy.draw(Level, obs, screen)
         Shotgun.draw(screen, shooting)
 
     pg.display.update()

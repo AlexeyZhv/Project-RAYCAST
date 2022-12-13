@@ -1,5 +1,6 @@
 from ray_module import *
 from Global import *
+from Math.Ray import *
 
 class Beam:
     def __init__(self, lmap, coord_1, ang, length, height, thickness, qual):
