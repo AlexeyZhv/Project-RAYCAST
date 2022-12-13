@@ -10,9 +10,9 @@ class Ray:
         self.pos = np.array(pos)
         self.vector = vector.multiply_by_number(1 / vector.length)
         self.length = length
-        '''ang = self.vector.convert_to_angle()
+        ang = self.vector.convert_to_angle()
         hor_vec, ver_vec, hor_cell, ver_cell = ray(lmap, self.pos, ang)
-        self.length = min(length, min(mag(hor_vec), mag(ver_vec)))'''
+        self.length = min(length, min(mag(hor_vec), mag(ver_vec)))
         RAYS.append(self)
 
     def check_intersection_with_enemy(self, enemy):
