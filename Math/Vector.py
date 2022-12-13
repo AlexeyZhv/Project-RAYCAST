@@ -39,17 +39,20 @@ class Vector:
         return self.is_collinear(vector) and (self.x * vector.x < 0 or self.y * vector.y < 0)
 
     def convert_to_angle(self):
+        alpha = 0
         if self.x == 0:
             if self.y < 0:
-                return 3 * np.pi / 2
-            if self.y > 0:
-                return np.pi / 2
+                alpha = 3 * np.pi / 2
+            elif self.y > 0:
+                alpha = np.pi / 2
         else:
-            a = np.arctan(self.y / self.x)
-            if self.y >= 0 and self.x != 1:
-                return a
-            else:
-                return np.pi + a
+            a = np.arctan2(self.y, self.x)
+            alpha = a
+        if alpha < 0:
+            alpha += 2 * np.pi
+        elif alpha > 2 * np.pi:
+            alpha -= 2 * np.pi
+        return alpha
 
     def set_by_angle(self, angle):
         self.x = np.cos(angle)

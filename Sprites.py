@@ -4,19 +4,21 @@ from ray_module import *
 import Global as g
 from Global import *
 
+
 class Sprite:
     def __init__(self, coord, texture, size, qual, mindist):
         self.coord = np.array(coord)
         self.qual = qual
         self.mindist = mindist
         self.size = np.array(size)
-        #splitting image into columns
+        # splitting image into columns
         step = texture.get_width() / (self.qual - 1)
         self.columns = []
         for i in range(self.qual - 1)[::-1]:
             temp_surface = pg.Surface((texture.get_width() / (self.qual - 1), texture.get_height()), pg.SRCALPHA)
             temp_surface.blit(texture, [- i * step, 0])
             self.columns.append(temp_surface)
+
     def draw(self, lmap, player, surface):
         dist = mag([self.coord[1] - player.coord[1], self.coord[0] - player.coord[0]])
         step = self.size[0] / (self.qual - 1)
@@ -24,12 +26,12 @@ class Sprite:
         dists = []
         visible = []
         if dist > self.mindist:
-            #calculating angles
+            # calculating angles
             ang = np.arctan2(self.coord[1] - player.coord[1], self.coord[0] - player.coord[0])
             angsize = self.size / dist * scale
             if ang < 0:
                 ang += 2 * np.pi
-            #rotating sprite, calculating props
+            # rotating sprite, calculating props
             for i in range(self.qual):
                 coord = self.coord + rotate([0, self.size[0] / 2 - i * step], ang)
                 angle = np.arctan2(coord[1] - player.coord[1], coord[0] - player.coord[0])
@@ -45,14 +47,19 @@ class Sprite:
                     offset += 2 * np.pi
                 offsets.append(offset)
                 dists.append(distance)
-            #displaying the columns
+            # displaying the columns
             if len(offsets) > 1:
                 for i in range(len(offsets) - 1):
                     if abs(offsets[i] - offsets[i + 1]) < np.pi:
                         dist = (dists[i] + dists[i + 1]) / 2
                         wid = abs(offsets[i] - offsets[i + 1])
                         if visible[i] and visible[i + 1]:
-                            surface.blit(pg.transform.scale(self.columns[i], [wid * scale + 1, angsize[1]]), [offsets[i + 1] * scale + width / 2, height / 2 - angsize[1] / 2])
+                            surface.blit(pg.transform.scale(self.columns[i], [wid * scale + 1, angsize[1]]),
+                                         [offsets[i + 1] * scale + width / 2, height / 2 - angsize[1] / 2])
+
+    def move(self, coord):
+        self.coord = coord
+
 
 class Fixed_sprite:
     def __init__(self, coord, texture, size, qual, mindist, ang):
@@ -61,13 +68,14 @@ class Fixed_sprite:
         self.qual = qual
         self.mindist = mindist
         self.size = np.array(size)
-        #splitting image into columns
+        # splitting image into columns
         step = texture.get_width() / (self.qual - 1)
         self.columns = []
         for i in range(self.qual - 1)[::-1]:
             temp_surface = pg.Surface((texture.get_width() / (self.qual - 1), texture.get_height()), pg.SRCALPHA)
             temp_surface.blit(texture, [- i * step, 0])
             self.columns.append(temp_surface)
+
     def draw(self, lmap, player, surface):
         dist = mag([self.coord[1] - player.coord[1], self.coord[0] - player.coord[0]])
         step = self.size[0] / (self.qual - 1)
@@ -75,11 +83,11 @@ class Fixed_sprite:
         dists = []
         visible = []
         if dist > self.mindist:
-            #calculating angles
+            # calculating angles
             angsize = self.size / dist * scale
             if self.ang < 0:
                 self.ang += 2 * np.pi
-            #rotating sprite, calculating props
+            # rotating sprite, calculating props
             for i in range(self.qual):
                 coord = self.coord + rotate([0, self.size[0] / 2 - i * step], self.ang)
                 angle = np.arctan2(coord[1] - player.coord[1], coord[0] - player.coord[0])
@@ -95,26 +103,28 @@ class Fixed_sprite:
                     offset += 2 * np.pi
                 offsets.append(offset)
                 dists.append(distance)
-            #displaying the columns
+            # displaying the columns
             if len(offsets) > 1:
                 for i in range(len(offsets) - 1):
                     if abs(offsets[i] - offsets[i + 1]) < np.pi:
                         dist = (dists[i] + dists[i + 1]) / 2
                         wid = abs(offsets[i] - offsets[i + 1])
                         if visible[i] and visible[i + 1]:
-                            surface.blit(pg.transform.scale(self.columns[i], [wid * scale + 1, angsize[1]]), [offsets[i + 1] * scale + width / 2, height / 2 - angsize[1] / 2])
-
+                            surface.blit(pg.transform.scale(self.columns[i], [wid * scale + 1, angsize[1]]),
+                                         [offsets[i + 1] * scale + width / 2, height / 2 - angsize[1] / 2])
 
 
 boom = []
 for i in range(1, 15):
     boom.append(pg.image.load(f"./sprites/expl/{i}.png"))
 
+
 class expl:
     def __init__(self, coord):
         self.phase = 0
         self.coord = coord
         g.EXPLOSIONS.append(self)
+
     def draw(self, lmap, player, surface):
         if self.phase <= 13:
             temp_sprite = Sprite(self.coord, boom[self.phase], [32, 32], 2, 20)
@@ -126,10 +136,8 @@ class expl:
             del self
 
 
-
-
 LAMPS = [
-    Sprite([128, 128], pg.image.load("./sprites/lamp.png"),            [48, 48], 6, 40),
-    Sprite([128, 256], pg.image.load("./sprites/lamp.png"),            [48, 48], 6, 40),
+    Sprite([128, 128], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 40),
+    Sprite([128, 256], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 40),
     Sprite([256 + 128, 256 + 64], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 40),
 ]

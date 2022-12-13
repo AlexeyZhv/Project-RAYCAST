@@ -18,9 +18,9 @@ Shotgun = Weapon()
 
 obs = Player([104, 104], 3 * np.pi / 2, 200, 2)
 
-Enemy([896, 896], [24, 48])
-Enemy([128, 896], [24, 48])
-Enemy([256, 896], [24, 48])
+Enemy([896, 896], [24, 48], 100)
+Enemy([128, 896], [24, 48], 100)
+Enemy([256, 896], [24, 48], 100)
 
 def new_texture(size):
     a = []
@@ -235,7 +235,13 @@ while not g.finished:
     ENEMIES.sort(key=distance, reverse=False)
     if MODE == "Map":
         pg.draw.circle(mapscreen, pcol, obs.coord * mapscale, 5)
+
+        for e in ENEMIES:
+            pg.draw.circle(mapscreen, "BLUE", e.pos * mapscale, 5)
+
         screen.blit(mapscreen, [0.5 * (width - height), 0])
+
+
     elif MODE == "3D":
         for beam in BEAMS:
             beam.draw(obs, screen)
@@ -248,6 +254,9 @@ while not g.finished:
             if enemy.health <= 0:
                 ENEMIES.remove(enemy)
                 del enemy
+
+    for enemy in ENEMIES:
+        enemy.move(obs, Level)
 
     screen.blit(fps_label, [20, 20])
     for beam in BEAMS:
