@@ -44,6 +44,7 @@ font = pg.font.SysFont("comicsansms", 30)
 pg.mouse.set_visible(False)
 
 while not g.finished:
+    trigger_pressed = False
     interacting = False
     shooting = False
     clock.tick(FPS)
@@ -74,7 +75,9 @@ while not g.finished:
                 g.PAUSED = True
             if event.key == pg.K_SPACE:
                 shooting = True
-    
+        keys = pg.key.get_pressed()
+        if keys[pg.K_SPACE]:
+            trigger_pressed = True
 
     # check if there is a wall in front of the player
     i_w = 0
@@ -274,7 +277,7 @@ while not g.finished:
             enemy.draw(Level, obs, screen)
         for explosion in EXPLOSIONS:
             explosion.draw(Level, obs, screen)
-        WEAPONS[selected_weapon].draw(screen, shooting)
+        WEAPONS[selected_weapon].draw(screen, shooting, trigger_pressed)
 
     pg.display.update()
 
