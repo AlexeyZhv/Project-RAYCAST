@@ -38,12 +38,14 @@ class Enemy:
 
         l_new = min(mag(hor_vec), mag(ver_vec))
 
+        is_mem = 0
         if (l_new >= length):
             self.mem = player.coord
         else:
             vect = Vector(self.mem - self.coord)
+            is_mem = 1
 
-        if vect.length > 30:
+        if (vect.length > 30 or is_mem == 1) and vect.length > 5:
             vect = vect.multiply_by_number(self.spd / FPS / vect.length)
             vect_arr = np.array([vect.x, vect.y])
             self.coord = self.coord + vect_arr
