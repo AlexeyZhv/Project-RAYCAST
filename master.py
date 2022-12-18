@@ -36,7 +36,7 @@ def new_texture(size):
     return a
 
 def distance(enemy):
-    return mag(enemy.pos - obs.coord)
+    return mag(enemy.coord - obs.coord)
 
 pg.init()
 pg.display.set_caption("RAYCASTER")
@@ -240,8 +240,8 @@ while not g.finished:
     if MODE == "Map":
         pg.draw.circle(mapscreen, pcol, obs.coord * mapscale, 5)
 
-        for e in ENEMIES:
-            pg.draw.circle(mapscreen, "BLUE", e.pos * mapscale, 5)
+        for enemy in ENEMIES:
+            pg.draw.circle(mapscreen, "BLUE", enemy.coord * mapscale, 5)
 
         screen.blit(mapscreen, [0.5 * (width - height), 0])
 
@@ -259,8 +259,12 @@ while not g.finished:
                 ENEMIES.remove(enemy)
                 del enemy
 
+    # enemy movement
     for enemy in ENEMIES:
         enemy.move(obs, Level)
+        for enemy2 in ENEMIES:
+            if enemy != enemy2 and mag(enemy.coord - enemy2.coord) <= 30:
+                enemy.avoid(enemy2.coord)
 
     screen.blit(fps_label, [20, 20])
     for beam in BEAMS:

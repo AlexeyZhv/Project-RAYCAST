@@ -10,40 +10,50 @@ from Beam import *
 
 
 class Enemy:
-    def __init__(self, pos, size, spd, health=1, texture=target):
-        self.pos = np.array(pos)
+    def __init__(self, coord, size, spd, health=1, texture=target):
+        self.coord = np.array(coord)
         self.size = size
         self.spd = spd
-        self.sprite = Sprite(self.pos, texture, self.size, 5, 20)
+        self.sprite = Sprite(self.coord, texture, self.size, 5, 20)
         self.health = health
-        self.mem = self.pos
-        self.vect = None
-        self.hor_vec = None
+        self.mem = self.coord
         ENEMIES.append(self)
 
     def __del__(self):
-        expl(self.pos)
+        expl(self.coord)
 
     def draw(self, lmap, player, surface):
         self.sprite.draw(lmap, player, surface)
 
     def move(self, player, level_map):
-        vect = Vector(player.coord - self.pos)
+        '''
+        if enemy sees player, he will move to player, else he will move to last player's posintion
+        :param player:
+        :param level_map:
+        :return:
+        '''
+        vect = Vector(player.coord - self.coord)
         length = vect.length
-        hor_vec, ver_vec, trash, trash = ray(level_map, self.pos, vect.convert_to_angle())
+        hor_vec, ver_vec, trash, trash = ray(level_map, self.coord, vect.convert_to_angle())
 
         l_new = min(mag(hor_vec), mag(ver_vec))
 
         if (l_new >= length):
             self.mem = player.coord
         else:
-            vect = Vector(self.mem - self.pos)
-
-        self.vect = np.array([vect.x, vect.y])
-        self.hor_vec = hor_vec
+            vect = Vector(self.mem - self.coord)
 
         if vect.length > 30:
             vect = vect.multiply_by_number(self.spd / FPS / vect.length)
             vect_arr = np.array([vect.x, vect.y])
-            self.pos = self.pos + vect_arr
-            self.sprite.move(self.pos)
+            self.coord = self.coord + vect_arr
+            self.sprite.move(self.coord)
+
+    def avoid(self, point):
+        '''
+        enemy will run away from point
+        :param point:
+        :return:
+        '''
+        vect = (self.coord - point) / mag(self.coord - point)
+        self.coord = self.coord + vect * self.spd / FPS
