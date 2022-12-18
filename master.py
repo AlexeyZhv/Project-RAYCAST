@@ -22,9 +22,9 @@ selected_weapon = 0
 WEAPONS = [PISTOL, SHOTGUN]
 
 
-Enemy([896, 896], [24, 48], 100)
-Enemy([128, 896], [24, 48], 100)
-Enemy([256, 896], [24, 48], 100)
+Ork([896, 896])
+Ork([128, 896])
+Ork([256, 896])
 
 def new_texture(size):
     a = []
@@ -72,12 +72,19 @@ while not g.finished:
             if event.key == pg.K_e:
                 interacting = True
             if event.key == pg.K_ESCAPE:
-                g.PAUSED = True
-            if event.key == pg.K_SPACE:
+                g.PAUSED = True  
+        if event.type == pg.MOUSEBUTTONDOWN:
+            left, middle, right = pg.mouse.get_pressed()
+            if left:
                 shooting = True
-        keys = pg.key.get_pressed()
-        if keys[pg.K_SPACE]:
-            trigger_pressed = True
+
+    if MODE == "3D":
+        obs.ang += mouse_control()
+        if obs.ang >= 2 * np.pi:
+            obs.ang -= 2 * np.pi
+        elif obs.ang < 0:
+            obs.ang += 2 * np.pi
+
 
     # check if there is a wall in front of the player
     i_w = 0

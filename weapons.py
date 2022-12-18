@@ -97,7 +97,6 @@ class Minigun:
             g.BEAMS.append(beam)
             ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
                 Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
-
             
         
 

@@ -137,7 +137,7 @@ class expl:
 
 
 LAMPS = [
-    Sprite([128, 128], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 40),
-    Sprite([128, 256], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 40),
-    Sprite([256 + 128, 256 + 64], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 40),
+    Sprite([128, 128], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 60),
+    Sprite([128, 256], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 60),
+    Sprite([256 + 128, 256 + 64], pg.image.load("./sprites/lamp.png"), [48, 48], 6, 60),
 ]

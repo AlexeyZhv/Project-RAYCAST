@@ -1,5 +1,8 @@
 import pygame as pg
 import numpy as np
+from Global import *
+
+sens = 2
 
 def move_controls(alpha):
     move = False
@@ -29,3 +32,9 @@ def move_controls(alpha):
         alpha += (np.pi * 1.5)
         move = True
     return alpha, move
+
+
+def mouse_control():
+    x, y = pg.mouse.get_pos()
+    pg.mouse.set_pos([width / 2, height / 2])    
+    return (x - width / 2) * sens / scale
