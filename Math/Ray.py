@@ -5,7 +5,7 @@ from Math.Vector import *
 from ray_module import *
 
 
-class Ray:
+class Hitscan:
     def __init__(self, pos, vector, length, lmap):
         self.pos = np.array(pos)
         self.vector = vector.multiply_by_number(1 / vector.length)

@@ -127,7 +127,7 @@ class expl:
 
     def draw(self, lmap, player, surface):
         if self.phase <= 13:
-            temp_sprite = Sprite(self.coord, boom[self.phase], [32, 32], 2, 20)
+            temp_sprite = Sprite(self.coord, boom[self.phase], [32, 32], 5, 15)
             temp_sprite.draw(lmap, player, surface)
             del temp_sprite
             self.phase += 1

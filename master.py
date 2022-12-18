@@ -14,9 +14,9 @@ from Widgets import *
 from Enemy import *
 
 from random import random
-Shotgun = Weapon()
 
 obs = Player([104, 104], 3 * np.pi / 2, 200, 2)
+SHOTGUN = Shotgun(obs)
 
 Enemy([896, 896], [24, 48], 100)
 Enemy([128, 896], [24, 48], 100)
@@ -221,16 +221,8 @@ while not g.finished:
 
     # Code for the laser shotgun
     if MODE == "3D":
-        if Shotgun.state == 1:
-            for i in range(5):
-                ang = obs.ang + (0.5 - random()) * 0.3
-                beam = Beam(
-                    Level, [obs.coord[0] + 15 * np.cos(obs.ang), obs.coord[1] + 15 * np.sin(obs.ang)],
-                    ang, 400, 3, 500, 10
-                )
-                BEAMS.append(beam)
-                ray = Ray([obs.coord[0] + 15 * np.cos(obs.ang), obs.coord[1] + 15 * np.sin(obs.ang)],
-                          Vector([0, 1]).set_by_angle(ang), beam.length, Level)
+        if SHOTGUN.state == 1:
+            SHOTGUN.shoot(Level)
     
     ENEMIES.sort(key=distance, reverse=False)
     if MODE == "Map":
@@ -273,7 +265,7 @@ while not g.finished:
             enemy.draw(Level, obs, screen)
         for explosion in EXPLOSIONS:
             explosion.draw(Level, obs, screen)
-        Shotgun.draw(screen, shooting)
+        SHOTGUN.draw(screen, shooting)
 
     pg.display.update()
 
