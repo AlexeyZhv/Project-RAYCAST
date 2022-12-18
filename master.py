@@ -22,7 +22,7 @@ selected_weapon = 0
 WEAPONS = [PISTOL, SHOTGUN]
 
 
-Enemy([896, 896], [24, 48], 100)
+Enemy([896, 896], [64, 64], 100, texture=ork)
 Enemy([128, 896], [24, 48], 100)
 Enemy([256, 896], [24, 48], 100)
 

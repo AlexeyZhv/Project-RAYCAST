@@ -29,6 +29,7 @@ MENU = True
 
 ohno = pg.image.load("./sprites/ohno.png")
 target = pg.image.load("./sprites/target.png")
+ork = pg.image.load("./sprites/enemies/ork.png")
 
 finished = False
 clock = pg.time.Clock()

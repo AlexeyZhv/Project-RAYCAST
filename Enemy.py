@@ -45,7 +45,7 @@ class Enemy:
             vect = Vector(self.mem - self.coord)
             is_mem = 1
 
-        if (vect.length > 30 or is_mem == 1) and vect.length > 5:
+        if (vect.length > 48 or is_mem == 1) and vect.length > 5:
             vect = vect.multiply_by_number(self.spd / FPS / vect.length)
             vect_arr = np.array([vect.x, vect.y])
             self.coord = self.coord + vect_arr
