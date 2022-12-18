@@ -16,7 +16,11 @@ from Enemy import *
 from random import random
 
 obs = Player([104, 104], 3 * np.pi / 2, 200, 2)
+PISTOL = Pistol(obs)
 SHOTGUN = Shotgun(obs)
+selected_weapon = 0
+WEAPONS = [PISTOL, SHOTGUN]
+
 
 Enemy([896, 896], [24, 48], 100)
 Enemy([128, 896], [24, 48], 100)
@@ -54,17 +58,23 @@ while not g.finished:
         if event.type == pg.QUIT:
             g.finished = True
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_TAB:
+            if event.key == pg.K_m:
                 if MODE == "3D":
                     MODE = "Map"
                 else:
                     MODE = "3D"
+            if event.key == pg.K_TAB:
+                WEAPONS[selected_weapon].weapon.state = 0
+                selected_weapon += 1
+                if selected_weapon >= len(WEAPONS):
+                    selected_weapon = 0
             if event.key == pg.K_e:
                 interacting = True
             if event.key == pg.K_ESCAPE:
                 g.PAUSED = True
             if event.key == pg.K_SPACE:
                 shooting = True
+    
 
     # check if there is a wall in front of the player
     i_w = 0
@@ -221,8 +231,7 @@ while not g.finished:
 
     # Code for the laser shotgun
     if MODE == "3D":
-        if SHOTGUN.state == 1:
-            SHOTGUN.shoot(Level)
+        WEAPONS[selected_weapon].shoot(Level)
     
     ENEMIES.sort(key=distance, reverse=False)
     if MODE == "Map":
@@ -265,7 +274,7 @@ while not g.finished:
             enemy.draw(Level, obs, screen)
         for explosion in EXPLOSIONS:
             explosion.draw(Level, obs, screen)
-        SHOTGUN.draw(screen, shooting)
+        WEAPONS[selected_weapon].draw(screen, shooting)
 
     pg.display.update()
 

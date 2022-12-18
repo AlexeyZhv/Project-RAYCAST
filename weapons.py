@@ -6,11 +6,17 @@ from random import random
 import Global as g
 
 Shotgun_tex = []
+Pistol_tex = []
 FPS = 60
 for i in range(1, 14):
     surface = pg.surface.Surface([1200, 800], pg.SRCALPHA)
     surface.blit(pg.image.load(f"sprites/Shotgun/shotgun{i}.png"), [0, 24])
     Shotgun_tex.append(surface)
+
+for i in range(0, 8):
+    surface = pg.surface.Surface([1200, 800], pg.SRCALPHA)
+    surface.blit(pg.image.load(f"sprites/Pistol/{i}.png"), [0, 24])
+    Pistol_tex.append(surface)
 
 class Weapon:
     def __init__(self, animation, cooldown) -> None:
@@ -36,19 +42,41 @@ class Shotgun:
         self.weapon = Weapon(Shotgun_tex, 1.5)
         self.state = self.weapon.state
         self.player = player
+        self.shooting = False
     def draw(self, surface, shooting):
         self.weapon.draw(surface, shooting)
         self.state = self.weapon.state
     def shoot(self, lmap):
-        for i in range(5):
-            ang = self.player.ang + (0.5 - random()) * 0.3
+        if self.state == 1:
+            for i in range(5):
+                ang = self.player.ang + (0.5 - random()) * 0.3
+                beam = Beam(
+                    lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
+                    ang, 400, 3, 500, 10
+                )
+                g.BEAMS.append(beam)
+                ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
+                    Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
+
+class Pistol:
+    def __init__(self, player) -> None:
+        self.weapon = Weapon(Pistol_tex, 0.6)
+        self.state = self.weapon.state
+        self.player = player
+        self.shooting = False
+    def draw(self, surface, shooting):
+        self.weapon.draw(surface, shooting)
+        self.state = self.weapon.state
+    def shoot(self, lmap):
+        if self.state == 1:
+            ang = self.player.ang
             beam = Beam(
-                lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                ang, 400, 3, 500, 10
+                    lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
+                    ang, 400, 3, 500, 10
             )
             g.BEAMS.append(beam)
             ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                      Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
+                Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
 
 
             
