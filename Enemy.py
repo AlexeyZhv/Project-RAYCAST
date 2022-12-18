@@ -17,39 +17,12 @@ class Enemy:
         self.sprite = Sprite(self.coord, texture, self.size, 5, 20)
         self.health = health
         self.mem = self.coord
-        ENEMIES.append(self)
 
     def __del__(self):
         expl(self.coord)
 
     def draw(self, lmap, player, surface):
         self.sprite.draw(lmap, player, surface)
-
-    def move(self, player, level_map):
-        '''
-        if enemy sees player, he will move to player, else he will move to last player's posintion
-        :param player:
-        :param level_map:
-        :return:
-        '''
-        vect = Vector(player.coord - self.coord)
-        length = vect.length
-        hor_vec, ver_vec, trash, trash = ray(level_map, self.coord, vect.convert_to_angle())
-
-        l_new = min(mag(hor_vec), mag(ver_vec))
-
-        is_mem = 0
-        if (l_new >= length):
-            self.mem = player.coord
-        else:
-            vect = Vector(self.mem - self.coord)
-            is_mem = 1
-
-        if (vect.length > 48 or is_mem == 1) and vect.length > 5:
-            vect = vect.multiply_by_number(self.spd / FPS / vect.length)
-            vect_arr = np.array([vect.x, vect.y])
-            self.coord = self.coord + vect_arr
-            self.sprite.move(self.coord)
 
     def avoid(self, point):
         '''
@@ -62,7 +35,13 @@ class Enemy:
 
 class Ork:
     def __init__(self, coord) -> None:
-        self.enemy = Enemy(coord, [48, 48], 100, 1, target)
+        self.enemy = Enemy(coord, [48, 48], 100, 1, ork)
+        self.coord = self.enemy.coord
+        self.size = self.enemy.size
+        self.health = self.enemy.health
+        ENEMIES.append(self)
+    def draw(self, lmap, player, surface):
+        self.enemy.draw(lmap, player, surface)
     def move(self, player, level_map):
         '''
         if enemy sees player, he will move to player, else he will move to last player's posintion
@@ -88,3 +67,7 @@ class Ork:
             vect_arr = np.array([vect.x, vect.y])
             self.enemy.coord = self.enemy.coord + vect_arr
             self.enemy.sprite.move(self.enemy.coord)
+        self.coord = self.enemy.coord
+            
+    def avoid(self, point):
+        self.enemy.avoid(point)

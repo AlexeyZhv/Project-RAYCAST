@@ -72,31 +72,12 @@ class Pistol:
             ang = self.player.ang
             beam = Beam(
                     lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                    ang, 400, 3, 500, 10
+                    ang, 10000, 3, 500, 10
             )
             g.BEAMS.append(beam)
             ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
                 Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
 
-class Minigun:
-    def __init__(self, player) -> None:
-        self.weapon = Weapon(Pistol_tex, 0.1)
-        self.state = self.weapon.state
-        self.player = player
-        self.shooting = False
-    def draw(self, surface, shooting, trigger_pressed):
-        self.weapon.draw(surface, trigger_pressed)
-        self.state = self.weapon.state
-    def shoot(self, lmap):
-        if self.state == 1:
-            ang = self.player.ang
-            beam = Beam(
-                    lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                    ang, 400, 3, 500, 10
-            )
-            g.BEAMS.append(beam)
-            ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
             
         
 
