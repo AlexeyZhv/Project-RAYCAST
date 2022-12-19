@@ -51,6 +51,7 @@ while not g.finished:
     shooting = False
     clock.tick(FPS)
     fps_label = font.render(f"FPS: {int(clock.get_fps())}", True, "RED")
+    hp_label = font.render(f"HEALTH: {int(obs.hp)}", True, "RED")
 
     settings_menu()
     main_menu()
@@ -276,7 +277,8 @@ while not g.finished:
             if enemy != enemy2 and mag(enemy.coord - enemy2.coord) <= 30:
                 enemy.avoid(enemy2.coord)
 
-    screen.blit(fps_label, [20, 20])
+    screen.blit(fps_label, [hp_label.get_width() / 2, 20])
+    screen.blit(hp_label, [width - 1.5 * hp_label.get_width(), 20])
     for beam in BEAMS:
         if beam.timer > 0.2:
             BEAMS.remove(beam)

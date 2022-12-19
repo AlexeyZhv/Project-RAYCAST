@@ -8,6 +8,7 @@ class Player:
         self.ang = ang
         self.spd = spd
         self.omega = omega
+        self.hp = 10
 
     def move(self, angle):
         self.coord = self.coord + self.spd / FPS * rotate([1, 0], angle)

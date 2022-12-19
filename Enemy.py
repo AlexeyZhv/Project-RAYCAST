@@ -13,6 +13,11 @@ for i in range(8):
     sprite = pg.image.load(f"./sprites/enemies/ork_run/ork_run_{i}.png")
     ork_run.append(sprite)
 
+ork_attack = []
+for i in range(8):
+    sprite = pg.image.load(f"./sprites/enemies/ork_attack/ork_attack_{i}.png")
+    ork_attack.append(sprite)
+
 
 class Enemy:
     def __init__(self, coord, size, spd, health=1, texture=ohno):
@@ -40,13 +45,25 @@ class Enemy:
 class Ork(Enemy):
     def __init__(self, coord) -> None:
         super().__init__(coord, [48, 48], 100, 1, ork)
+        self.state = "running"
+        self.attacked = False
     
     def draw(self, lmap, player, surface):
-        self.timer += 1 / FPS
-        if self.timer >= 0.8:
-            self.timer = 0
-        self.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
-        self.sprite.draw(lmap, player, surface)
+
+        if self.state == "running":
+            self.timer += 1 / FPS
+            if self.timer >= 0.8:
+                self.timer = 0
+            self.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
+            self.sprite.draw(lmap, player, surface)
+
+        elif self.state == "attacking":
+            self.timer += 1 / FPS
+            if self.timer >= 0.8:
+                self.timer = 0
+                self.attacked = False
+            self.sprite = Sprite(self.coord, ork_attack[int(self.timer / 0.1)], self.size, 5, 20)
+            self.sprite.draw(lmap, player, surface)
 
     def move(self, player, level_map):
         '''
@@ -68,15 +85,31 @@ class Ork(Enemy):
             vect = Vector(self.mem - self.coord)
             is_mem = 1
 
-        if (vect.length > 60 or is_mem == 1) and vect.length > 5:
+        #checking states
+        if self.state == "running" and vect.length < 60 and is_mem == 0:
+            self.state = "attacking"
+            self.attacked = False
+            self.timer = 0
+        elif self.state == "attacking" and vect.length > 80:
+            self.state = "running"
+            self.attacked = False
+            self.timer = 0
+
+        if (vect.length > 40 or is_mem == 1) and vect.length > 5 and self.state == "running":
             vect = vect.multiply_by_number(self.spd / FPS / vect.length)
             vect_arr = np.array([vect.x, vect.y])
             self.coord = self.coord + vect_arr
             self.sprite.move(self.coord)
-        self.coord = self.coord
+
+        self.attack(player, level_map)
 
     def attack(self, player, lmap):
-        pass
+        if self.state == "attacking" and not self.attacked:
+            if self.timer > 0.2:
+                self.attacked = True
+                print("doom")
+                player.hp -= 1
+
 
 class Archer(Enemy):
     def __init__(self, coord):
