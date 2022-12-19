@@ -15,7 +15,7 @@ from Enemy import *
 
 from random import random
 
-obs = Player([104, 104], 3 * np.pi / 2, 200, 2)
+obs = Player([130, 104], 3 * np.pi / 2, 200, 2, 24)
 PISTOL = Pistol(obs)
 SHOTGUN = Shotgun(obs)
 selected_weapon = 0
@@ -23,10 +23,10 @@ WEAPONS = [PISTOL, SHOTGUN]
 OBJECTS = []
 
 
-Ork([896, 896])
-Ork([896 - 128, 896])
-Ork([128, 896])
-Ork([256, 896])
+Archer([896 - 512, 896])
+#Ork([896 - 128, 896])
+#Ork([128, 896])
+#Ork([256, 896])
 
 def new_texture(size):
     a = []
@@ -135,13 +135,14 @@ while not g.finished:
                     texture.append(row)
             else:
                 texture = tex
-            tex_scale = height / len(texture)
+            tex_scale = min(height / len(texture), width / len(texture[0]))
+            drawscreen = pg.surface.Surface([len(texture[0]) * tex_scale, len(texture) * tex_scale])
             COLOR = 0
-            while MODE == "Draw":
+            while MODE == "Draw" and not g.finished:
                 chcolor = False
                 for event in pg.event.get():
                     if event.type == pg.QUIT:
-                        finished = True
+                        g.finished = True
                         mode = "3D"
                     if event.type == pg.KEYDOWN:
                         if event.key == pg.K_TAB:
@@ -155,7 +156,7 @@ while not g.finished:
                 if left:
                     chcolor = True
                 x1, y = pg.mouse.get_pos()
-                x = x1 - (width / 2 - height / 2)
+                x = x1 - (width - drawscreen.get_width()) / 2
 
                 if chcolor:
                     i, j = int(x // tex_scale), int(y // tex_scale)
@@ -163,20 +164,20 @@ while not g.finished:
                         i = 0
                     if j < 0:
                         j = 0
-                    if i > len(texture) - 1:
-                        i = len(texture) - 1
+                    if i > len(texture[j]) - 1:
+                        i = len(texture[j]) - 1
                     if j > len(texture) - 1:
                         j = len(texture) - 1
-                    texture[j][i] = COLOR
+                    texture[j][i] = COLORS[COLOR]
 
                 clock.tick(FPS)
                 screen.fill("#444444")
                 drawscreen.fill("#444444")
-                for i in range(len(texture)):
-                    for j in range(len(texture[0])):
-                        pg.draw.rect(drawscreen, COLORS[texture[j][i]],
+                for i in range(len(texture[0])):
+                    for j in range(len(texture)):
+                        pg.draw.rect(drawscreen, texture[j][i],
                                      [[tex_scale * i + 1, tex_scale * j + 1], [tex_scale - 2, tex_scale - 2]])
-                screen.blit(drawscreen, [(width - height) / 2, 0])
+                screen.blit(drawscreen, [(width - drawscreen.get_width()) / 2, 0])
                 pg.draw.circle(screen, "GREY", [x1, y], 7)
                 pg.draw.circle(screen, COLORS[COLOR], [x1, y], 6)
                 pg.display.update()
@@ -262,11 +263,11 @@ while not g.finished:
         for enemy in ENEMIES:
             for ray in RAYS:
                 if ray.check_intersection_with_enemy(enemy):
-                    enemy.health = enemy.health - 1
+                    enemy.hp = enemy.hp - 1
                 RAYS.remove(ray)
                 del ray
         for enemy in ENEMIES:
-            if enemy.health <= 0:
+            if enemy.hp <= 0:
                 ENEMIES.remove(enemy)
                 del enemy
 

@@ -72,15 +72,9 @@ class Pistol:
     def shoot(self, lmap):
         if self.state == 1:
             ang = self.player.ang
-            '''beam = Beam(
-                lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                ang, 10000, 3, 500, 10
-            )'''
             Bullet([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-            Vector([1, 0]).set_by_angle(ang).multiply_by_number(400)
+            Vector([1, 0]).set_by_angle(ang).multiply_by_number(400), self.player, "player"
             )
-            '''ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                Vector([0, 1]).set_by_angle(ang), beam.length, lmap)'''
 
             
         

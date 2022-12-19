@@ -3,7 +3,8 @@ from Math.Vector import *
 
 
 class Player:
-    def __init__(self, coord, ang, spd, omega):
+    def __init__(self, coord, ang, spd, omega, size):
+        self.size = [size]
         self.coord = np.array(coord)
         self.ang = ang
         self.spd = spd
