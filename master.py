@@ -206,8 +206,8 @@ while not g.finished:
 
     if MODE == "3D":
         #Drawing floor and ceil
-        screen.fill("#201500")
-        pg.draw.rect(screen, "#666666", [[0, 0], [width, height / 2]])
+        screen.fill([int(38 * 1.2), int(43 * 1.2), int(68 * 1.2)])
+        pg.draw.rect(screen, [int(38 * 0.6), int(43 * 0.6), int(68 * 0.6)], [[0, 0], [width, height / 2]])
     elif MODE == "Map":
         screen.fill("#444444")
         mapscreen.fill("#444444")
@@ -241,7 +241,7 @@ while not g.finished:
                 pg.draw.line(mapscreen, "#003300", obs.coord * mapscale, (obs.coord + ver_vec) * mapscale)
             elif MODE == "3D":
                 texdraw(screen, ver_cell[1], TEXTURES[ver_cell[0]], wall_height / mag(ver_vec) / np.cos(offset) * scale,
-                        [(offset + fov_rad / 2) * scale, height / 2], int(width / g.rays_number) + 1, 0.5)
+                        [(offset + fov_rad / 2) * scale, height / 2], int(width / g.rays_number) + 1, 0.3)
 
     # Code for the laser shotgun
     if MODE == "3D":

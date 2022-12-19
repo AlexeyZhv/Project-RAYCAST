@@ -38,4 +38,4 @@ def texdraw(surface, intersection_coord, texture, height, coord, width, shade):
         pg.draw.line(surface, col, [x, y1], [x, y2], width)
     
 void_texture = [[[0, 0, 0]]]
-TEXTURES = [void_texture, read_image("./sprites/ohno.png")]
+TEXTURES = [void_texture, read_image("./sprites/wall/wall.png")]
