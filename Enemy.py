@@ -15,19 +15,25 @@ for i in range(8):
 
 
 class Enemy:
-    def __init__(self, coord, size, spd, health=1, texture=target):
+    def __init__(self, coord, size, spd, health=1, texture):
         self.coord = np.array(coord)
         self.size = size
         self.spd = spd
         self.sprite = Sprite(self.coord, texture, self.size, 5, 20)
         self.health = health
         self.mem = self.coord
+        self.timer = 0
 
     def __del__(self):
         expl(self.coord)
 
     def draw(self, lmap, player, surface):
         self.sprite.draw(lmap, player, surface)
+
+        if self.timer >= 0.8:
+            self.timer = 0
+
+        self.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
 
     def avoid(self, point):
         '''
@@ -38,22 +44,11 @@ class Enemy:
         vect = (self.coord - point) / mag(self.coord - point)
         self.coord = self.coord + vect * self.spd / FPS
 
-class Ork:
+class Ork(Enemy):
     def __init__(self, coord) -> None:
-        self.enemy = Enemy(coord, [48, 48], 100, 1, ork)
-        self.coord = self.enemy.coord
-        self.size = self.enemy.size
-        self.health = self.enemy.health
-        self.timer = 0
+        super().__init__(coord, [48, 48], 100, 1, ork)
         ENEMIES.append(self)
-    def draw(self, lmap, player, surface):
-        self.timer += 1 / FPS
-        if self.timer >= 0.8:
-            self.timer = 0
 
-        self.enemy.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
-
-        self.enemy.draw(lmap, player, surface)
     def move(self, player, level_map):
         '''
         if enemy sees player, he will move to player, else he will move to last player's posintion
@@ -61,25 +56,22 @@ class Ork:
         :param level_map:
         :return:
         '''
-        vect = Vector(player.coord - self.enemy.coord)
+        vect = Vector(player.coord - self.coord)
         length = vect.length
-        hor_vec, ver_vec, trash, trash = ray(level_map, self.enemy.coord, vect.convert_to_angle())
+        hor_vec, ver_vec, trash, trash = ray(level_map, self.coord, vect.convert_to_angle())
 
         l_new = min(mag(hor_vec), mag(ver_vec))
 
         is_mem = 0
         if (l_new >= length):
-            self.enemy.mem = player.coord
+            self.mem = player.coord
         else:
-            vect = Vector(self.enemy.mem - self.enemy.coord)
+            vect = Vector(self.mem - self.coord)
             is_mem = 1
 
         if (vect.length > 60 or is_mem == 1) and vect.length > 5:
-            vect = vect.multiply_by_number(self.enemy.spd / FPS / vect.length)
+            vect = vect.multiply_by_number(self.spd / FPS / vect.length)
             vect_arr = np.array([vect.x, vect.y])
-            self.enemy.coord = self.enemy.coord + vect_arr
-            self.enemy.sprite.move(self.enemy.coord)
-        self.coord = self.enemy.coord
-            
-    def avoid(self, point):
-        self.enemy.avoid(point)
+            self.coord = self.coord + vect_arr
+            self.sprite.move(self.coord)
+        self.coord = self.coord
