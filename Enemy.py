@@ -8,6 +8,11 @@ from Player import *
 from Sprites import *
 from Beam import *
 
+ork_run = []
+for i in range(8):
+    sprite = pg.image.load(f"./sprites/enemies/ork_run/ork_run_{i}.png")
+    ork_run.append(sprite)
+
 
 class Enemy:
     def __init__(self, coord, size, spd, health=1, texture=target):
@@ -39,8 +44,15 @@ class Ork:
         self.coord = self.enemy.coord
         self.size = self.enemy.size
         self.health = self.enemy.health
+        self.timer = 0
         ENEMIES.append(self)
     def draw(self, lmap, player, surface):
+        self.timer += 1 / FPS
+        if self.timer >= 0.8:
+            self.timer = 0
+
+        self.enemy.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
+
         self.enemy.draw(lmap, player, surface)
     def move(self, player, level_map):
         '''
