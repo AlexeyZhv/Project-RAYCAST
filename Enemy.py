@@ -25,8 +25,8 @@ class Enemy:
         self.timer = 0
         ENEMIES.append(self)
 
-    def __del__(self):
-        expl(self.coord)
+    '''def __del__(self):
+        expl(self.coord)'''
 
     def avoid(self, point):
         '''

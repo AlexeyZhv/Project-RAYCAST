@@ -6,7 +6,7 @@ from Global import *
 
 
 class Sprite:
-    def __init__(self, coord, texture, size, qual, mindist):
+    def __init__(self, coord, texture=ohno, size=[48, 48], qual=5, mindist=40):
         self.coord = np.array(coord)
         self.qual = qual
         self.mindist = mindist

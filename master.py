@@ -20,9 +20,11 @@ PISTOL = Pistol(obs)
 SHOTGUN = Shotgun(obs)
 selected_weapon = 0
 WEAPONS = [PISTOL, SHOTGUN]
+OBJECTS = []
 
 
-Archer([896, 896])
+Ork([896, 896])
+Ork([896 - 128, 896])
 Ork([128, 896])
 Ork([256, 896])
 
@@ -35,8 +37,8 @@ def new_texture(size):
         a.append(b)
     return a
 
-def distance(enemy):
-    return mag(enemy.coord - obs.coord)
+def distance(obj):
+    return mag(obj.coord - obs.coord)
 
 pg.init()
 pg.display.set_caption("RAYCASTER")
@@ -201,8 +203,8 @@ while not g.finished:
         obs.move(alpha)
 
     if MODE == "3D":
-        #Floor and ceil
-        screen.fill("#222222")
+        #Drawing floor and ceil
+        screen.fill("#201500")
         pg.draw.rect(screen, "#666666", [[0, 0], [width, height / 2]])
     elif MODE == "Map":
         screen.fill("#444444")
@@ -262,6 +264,7 @@ while not g.finished:
                     enemy.health = enemy.health - 1
                 RAYS.remove(ray)
                 del ray
+        for enemy in ENEMIES:
             if enemy.health <= 0:
                 ENEMIES.remove(enemy)
                 del enemy
@@ -279,17 +282,18 @@ while not g.finished:
             BEAMS.remove(beam)
             del beam
 
+    for bullet in BULLETS:
+        bullet.update()
+
     #testing drawings
-    ENEMIES.sort(key=distance, reverse=True)
+    OBJECTS = ENEMIES + LAMPS + BULLETS + EXPLOSIONS
+    OBJECTS.sort(key=distance, reverse=True)
     if MODE == "3D":
-        for lamp in LAMPS:
-            lamp.draw(Level, obs, screen)
-        for enemy in ENEMIES:
-            enemy.draw(Level, obs, screen)
-        for explosion in EXPLOSIONS:
-            explosion.draw(Level, obs, screen)
+        for obj in OBJECTS:
+            obj.draw(Level, obs, screen)
         WEAPONS[selected_weapon].draw(screen, shooting, trigger_pressed)
 
+    screen.blit(grad_surf, [0, 0])
     pg.display.update()
 
 pg.quit()

@@ -3,6 +3,7 @@ from Math.Ray import *
 from Math.Vector import *
 from Beam import *
 from random import random
+from Bullet import *
 import Global as g
 
 Shotgun_tex = []
@@ -52,11 +53,12 @@ class Shotgun:
                 ang = self.player.ang + (0.5 - random()) * 0.3
                 beam = Beam(
                     lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                    ang, 400, 3, 500, 10
+                    ang, 5000, 3, 500, 10
                 )
                 g.BEAMS.append(beam)
                 ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
                     Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
+                RAYS.append(ray)
 
 class Pistol:
     def __init__(self, player) -> None:
@@ -70,13 +72,15 @@ class Pistol:
     def shoot(self, lmap):
         if self.state == 1:
             ang = self.player.ang
-            beam = Beam(
-                    lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                    ang, 10000, 3, 500, 10
+            '''beam = Beam(
+                lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
+                ang, 10000, 3, 500, 10
+            )'''
+            Bullet([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
+            Vector([1, 0]).set_by_angle(ang).multiply_by_number(400)
             )
-            g.BEAMS.append(beam)
-            ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
+            '''ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
+                Vector([0, 1]).set_by_angle(ang), beam.length, lmap)'''
 
             
         

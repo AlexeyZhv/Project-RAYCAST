@@ -20,6 +20,9 @@ class Vector:
 
     def projection(self, ray):
         return ray.vector.multiply_by_number(self.scalar_product(ray.vector))
+    
+    def vec_projection(self, vector):
+        return vector.multiply_by_number(self.scalar_product(vector))
 
     def is_collinear(self, vector):
         return self.x * vector.y == self.y * vector.x
@@ -39,15 +42,7 @@ class Vector:
         return self.is_collinear(vector) and (self.x * vector.x < 0 or self.y * vector.y < 0)
 
     def convert_to_angle(self):
-        alpha = 0
-        if self.x == 0:
-            if self.y < 0:
-                alpha = 3 * np.pi / 2
-            elif self.y > 0:
-                alpha = np.pi / 2
-        else:
-            a = np.arctan2(self.y, self.x)
-            alpha = a
+        alpha = np.arctan2(self.y, self.x)
         if alpha < 0:
             alpha += 2 * np.pi
         elif alpha > 2 * np.pi:
