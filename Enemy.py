@@ -23,19 +23,10 @@ class Enemy:
         self.health = health
         self.mem = self.coord
         self.timer = 0
+        ENEMIES.append(self)
 
     def __del__(self):
         expl(self.coord)
-
-    def draw(self, lmap, player, surface):
-        self.timer += 1 / FPS
-
-        if self.timer >= 0.8:
-            self.timer = 0
-
-        self.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
-
-        self.sprite.draw(lmap, player, surface)
 
     def avoid(self, point):
         '''
@@ -46,11 +37,16 @@ class Enemy:
         vect = (self.coord - point) / mag(self.coord - point)
         self.coord = self.coord + vect * self.spd / FPS
 
-
 class Ork(Enemy):
     def __init__(self, coord) -> None:
         super().__init__(coord, [48, 48], 100, 1, ork)
-        ENEMIES.append(self)
+    
+    def draw(self, lmap, player, surface):
+        self.timer += 1 / FPS
+        if self.timer >= 0.8:
+            self.timer = 0
+        self.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
+        self.sprite.draw(lmap, player, surface)
 
     def move(self, player, level_map):
         '''
@@ -78,3 +74,29 @@ class Ork(Enemy):
             self.coord = self.coord + vect_arr
             self.sprite.move(self.coord)
         self.coord = self.coord
+
+    def attack(self, player, lmap):
+        pass
+
+class Archer(Enemy):
+    def __init__(self, coord):
+        super().__init__(coord, [24, 48], 100, 1, target)
+        self.charge = 0
+        self.timer = 0
+    def draw(self, lmap, player, surface):
+        self.sprite.draw(lmap, player, surface)
+    def move(self, player, lmap):
+        self.timer += 1 / FPS
+        pass
+    def attack(self, player, lmap):
+        vect = Vector(player.coord - self.coord)
+        hor_vec, ver_vec, trash, trash = ray(lmap, self.coord, vect.convert_to_angle())
+        l_ray = min(mag(hor_vec), mag(ver_vec))
+        if vect.length < 400 and vect.length < l_ray:
+            if self.charge > 1:
+                self.charge = 0
+                Beam(Level, self.coord, vect.convert_to_angle(), 500, 3, 100, 5)  
+            self.charge += 1 / FPS
+        else:
+            self.timer = 0
+

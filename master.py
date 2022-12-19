@@ -22,7 +22,7 @@ selected_weapon = 0
 WEAPONS = [PISTOL, SHOTGUN]
 
 
-Ork([896, 896])
+Archer([896, 896])
 Ork([128, 896])
 Ork([256, 896])
 
