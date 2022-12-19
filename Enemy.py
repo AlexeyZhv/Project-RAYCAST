@@ -15,7 +15,7 @@ for i in range(8):
 
 
 class Enemy:
-    def __init__(self, coord, size, spd, health=1, texture):
+    def __init__(self, coord, size, spd, health=1, texture=ohno):
         self.coord = np.array(coord)
         self.size = size
         self.spd = spd
@@ -28,12 +28,14 @@ class Enemy:
         expl(self.coord)
 
     def draw(self, lmap, player, surface):
-        self.sprite.draw(lmap, player, surface)
+        self.timer += 1 / FPS
 
         if self.timer >= 0.8:
             self.timer = 0
 
         self.sprite = Sprite(self.coord, ork_run[int(self.timer / 0.1)], self.size, 5, 20)
+
+        self.sprite.draw(lmap, player, surface)
 
     def avoid(self, point):
         '''
@@ -43,6 +45,7 @@ class Enemy:
         '''
         vect = (self.coord - point) / mag(self.coord - point)
         self.coord = self.coord + vect * self.spd / FPS
+
 
 class Ork(Enemy):
     def __init__(self, coord) -> None:
