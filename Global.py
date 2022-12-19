@@ -27,6 +27,8 @@ SETTINGS = False
 PAUSED = False
 MENU = True
 
+BULLET_DAMAGE = 1
+
 ohno = pg.image.load("./sprites/ohno.png")
 target = pg.image.load("./sprites/target.png")
 ork = pg.image.load("./sprites/enemies/ork.png")
