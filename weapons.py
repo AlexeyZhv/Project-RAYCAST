@@ -11,6 +11,7 @@ Shotgun_tex = []
 Pistol_tex = []
 Sword_tex = []
 Shield_tex = []
+Bow_tex = []
 
 FPS = 60
 for i in range(1, 14):
@@ -32,6 +33,11 @@ for i in range(0, 2):
     surface = pg.surface.Surface([width, height], pg.SRCALPHA)
     surface.blit(pg.transform.scale(pg.image.load(f"./sprites/characters/swordsman/shield/shield_{i}.png"), [width, height]), [0, 0])
     Shield_tex.append(surface)
+
+for i in range(0, 12):
+    surface = pg.surface.Surface([width, height], pg.SRCALPHA)
+    surface.blit(pg.transform.scale(pg.image.load(f"./sprites/characters/archer/archer_attack/archer_attack_{i}.png"), [width, height]), [0, 0])
+    Bow_tex.append(surface)
 
 class Weapon:
     def __init__(self, player, animation, cooldown, animation_time) -> None:
@@ -77,28 +83,6 @@ class Secondary(Weapon):
             surface.blit(self.animation[1], [0, 0])
 
 
-'''class Shotgun:
-    def __init__(self, player) -> None:
-        self.weapon = Weapon(Shotgun_tex, 1.5)
-        self.state = self.weapon.state
-        self.player = player
-        self.shooting = False
-    def draw(self, surface, shooting, trigger_pressed):
-        self.weapon.draw(surface, shooting)
-        self.state = self.weapon.state
-    def shoot(self, lmap):
-        if self.state == 1:
-            for i in range(5):
-                ang = self.player.ang + (0.5 - random()) * 0.3
-                beam = Beam(
-                    lmap, [self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                    ang, 5000, 3, 500, 10
-                )
-                g.BEAMS.append(beam)
-                ray = Hitscan([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-                    Vector([0, 1]).set_by_angle(ang), beam.length, lmap)
-                RAYS.append(ray)'''
-
 class Pistol(Primary):
     def __init__(self, player) -> None:
         super().__init__(player, Pistol_tex, 0.6, 0.6)
@@ -130,3 +114,11 @@ class Shield(Secondary):
         elif self.state == "ready":
             self.player.SHIELDED = False
 
+class Bow(Primary):
+    def __init__(self, player) -> None:
+        super().__init__(player, Bow_tex, 3.0,  1.1)
+    def shoot(self, lmap):
+        if self.state == "attacking" and not self.attacked:
+            if self.timer > 0.7:
+                self.attacked = True
+                Arrow(self.player.coord + rotate([15, 0], self.player.ang), Vector([0, 1]).set_by_angle(self.player.ang), 1500, self.player)

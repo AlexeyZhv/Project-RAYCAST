@@ -19,16 +19,20 @@ obs = Player([130, 104], 3 * np.pi / 2, 200, 2, 24)
 PISTOL = Pistol(obs)
 SWORD = Sword(obs)
 SHIELD = Shield(obs)
+BOW = Bow(obs)
 #SHOTGUN = Shotgun(obs)
 selected_weapon = 0
-WEAPONS = [SWORD, SHIELD]
+WEAPONS1 = [SWORD, SHIELD]
+WEAPONS2 = [BOW, BOW]
+WEAPONS = WEAPONS1
 OBJECTS = []
 
 
-Elf([896 - 512, 896])
+Elf([896, 896])
 Ork([896 - 128, 896])
-#Ork([128, 896])
-#Ork([256, 896])
+Ork([128, 896])
+Ork([256, 896])
+Elf([64 * 6, 64 * 6])
 
 def new_texture(size):
     a = []
@@ -58,12 +62,18 @@ while not g.finished:
     settings_menu()
     main_menu()
     pause_menu()
+    die_menu()
 
     #Checking main controls
     for event in pg.event.get():
         if event.type == pg.QUIT:
             g.finished = True
         if event.type == pg.KEYDOWN:
+            if event.key == pg.K_TAB:
+                if WEAPONS == WEAPONS1:
+                    WEAPONS = WEAPONS2
+                else:
+                    WEAPONS = WEAPONS1
             if event.key == pg.K_m:
                 if MODE == "3D":
                     MODE = "Map"
@@ -296,6 +306,9 @@ while not g.finished:
 
     #screen.blit(swordsman_idle_surface, [0, 0])
     screen.blit(grad_surf, [0, 0])
+
+    if obs.hp <= 0:
+        g.DIED = True
     pg.display.update()
 
 pg.quit()

@@ -49,6 +49,7 @@ class Menu:
 Main_menu = Menu(screen, ["Start game", "Settings", "Quit"], 50)
 Pause_menu = Menu(screen, ["Resume game", "Return to main menu", "Quit"], 50)
 Settings_menu = Menu(screen, ["Rays +10", "Rays -10", "Reset", "Back to main menu"], 50)
+Die_menu = Menu(screen, ["quit"], 100)
 
 def settings_menu():
     while Global.SETTINGS:
@@ -101,3 +102,12 @@ def pause_menu():
                 Global.finished = False
             elif selected == 2:
                 Global.finished = True
+
+def die_menu():
+    while Global.DIED:
+        finished, selected = Die_menu.draw("YOU DIED")
+        if finished:
+            Global.finished = True
+        elif selected == 0:
+            Global.finished = True
+            Global.DIED = False

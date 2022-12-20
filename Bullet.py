@@ -80,6 +80,15 @@ class Elf_arrow(Bullet):
     def __init__(self, start_coord, direction, speed, player):
         super().__init__(start_coord, direction, speed, player, "enemy")
         self.sprite = Sprite(self.coord, arrow, [3, 48], 2, 50)
+
+    def draw(self, lmap, player, surface):
+        Beam(lmap, self.coord, self.velocity.convert_to_angle(), mag(self.coord - self.prev_coord), 0, 500, 2, 0.1)
+        self.sprite.draw(lmap, player, surface)
+    
+class Arrow(Bullet):
+    def __init__(self, start_coord, direction, speed, player):
+        super().__init__(start_coord, direction, speed, player, "player")
+        self.sprite = Sprite(self.coord, arrow, [3, 48], 2, 50)
     
     def draw(self, lmap, player, surface):
         Beam(lmap, self.coord, self.velocity.convert_to_angle(), mag(self.coord - self.prev_coord), 0, 500, 2, 0.1)
