@@ -38,15 +38,19 @@ class Player:
         if self.j > 0:
             if Level[int(self.j - 1)][int(self.i)] > 0:
                 cols[0] = self.collision(self.i, self.j - 1, self.ang)
+                cols[0][2] = False
         if self.i < len(Level) - 1:
             if Level[int(self.j)][int(self.i + 1)] > 0:
                 cols[1] = self.collision(self.i + 1, self.j, self.ang)
+                cols[1][3] = False
         if self.j < len(Level) - 1:
             if Level[int(self.j + 1)][int(self.i)] > 0:
                 cols[2] = self.collision(self.i, self.j + 1, self.ang)
+                cols[2][2] = False
         if self.i > 0:
             if Level[int(self.j)][int(self.i - 1)] > 0:
                 cols[3] = self.collision(self.i - 1, self.j, self.ang)
+                cols[3][3] = False
 
         for col in cols:
             if col[2]:
