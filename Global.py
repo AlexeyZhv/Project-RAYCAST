@@ -7,7 +7,7 @@ width = 1200
 height = 800
 screen = pg.display.set_mode([width, height])
 mapscreen = pg.surface.Surface([height, height])
-drawscreen = pg.surface.Surface([height, height])
+
 FPS = 60
 FOV = 60
 rays_number = 100
