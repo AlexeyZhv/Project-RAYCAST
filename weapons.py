@@ -14,10 +14,6 @@ Shield_tex = []
 Bow_tex = []
 
 FPS = 60
-for i in range(1, 14):
-    surface = pg.surface.Surface([width, height], pg.SRCALPHA)
-    surface.blit(pg.image.load(f"sprites/Shotgun/shotgun{i}.png"), [0, 24])
-    Shotgun_tex.append(surface)
 
 for i in range(0, 8):
     surface = pg.surface.Surface([width, height], pg.SRCALPHA)
