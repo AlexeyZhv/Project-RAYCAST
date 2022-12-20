@@ -4,6 +4,7 @@ from Math.Vector import *
 
 class Player:
     def __init__(self, coord, ang, spd, omega, size):
+        self.SHIELDED = False
         self.size = [size]
         self.coord = np.array(coord)
         self.ang = ang
