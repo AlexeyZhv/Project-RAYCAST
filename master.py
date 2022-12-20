@@ -13,14 +13,11 @@ from Input import *
 from Widgets import *
 from Enemy import *
 
-from random import random
-
 obs = Player([130, 104], 3 * np.pi / 2, 200, 2, 24)
 PISTOL = Pistol(obs)
 SWORD = Sword(obs)
 SHIELD = Shield(obs)
 BOW = Bow(obs)
-#SHOTGUN = Shotgun(obs)
 selected_weapon = 0
 WEAPONS1 = [SWORD, SHIELD]
 WEAPONS2 = [BOW, BOW]
