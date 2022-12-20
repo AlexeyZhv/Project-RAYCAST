@@ -23,10 +23,10 @@ WEAPONS = [PISTOL, SHOTGUN]
 OBJECTS = []
 
 
-#Elf([896 - 512, 896])
+Elf([896 - 512, 896])
 Ork([896 - 128, 896])
-Ork([128, 896])
-Ork([256, 896])
+#Ork([128, 896])
+#Ork([256, 896])
 
 def new_texture(size):
     a = []
@@ -266,10 +266,6 @@ while not g.finished:
                     enemy.hp = enemy.hp - 1
                 RAYS.remove(ray)
                 del ray
-        for enemy in ENEMIES:
-            if enemy.hp <= 0:
-                ENEMIES.remove(enemy)
-                del enemy
 
     # enemy movement
     for enemy in ENEMIES:
@@ -280,10 +276,6 @@ while not g.finished:
 
     screen.blit(fps_label, [hp_label.get_width() / 2, 20])
     screen.blit(hp_label, [width - 1.5 * hp_label.get_width(), 20])
-    for beam in BEAMS:
-        if beam.timer > 0.2:
-            BEAMS.remove(beam)
-            del beam
 
     for bullet in BULLETS:
         bullet.update()

@@ -72,8 +72,8 @@ class Pistol:
     def shoot(self, lmap):
         if self.state == 1:
             ang = self.player.ang
-            Bullet([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
-            Vector([1, 0]).set_by_angle(ang).multiply_by_number(400), self.player, "player"
+            Fireball([self.player.coord[0] + 15 * np.cos(self.player.ang), self.player.coord[1] + 15 * np.sin(self.player.ang)],
+            Vector([1, 0]).set_by_angle(ang), 2000, self.player
             )
 
             

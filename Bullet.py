@@ -7,8 +7,8 @@ from Sprites import *
 from Beam import *
 
 class Bullet:
-    def __init__(self, start_coord, velocity, player, source="enemy"):
-        self.velocity = velocity
+    def __init__(self, start_coord, direction, speed, player, source="enemy"):
+        self.velocity = direction.multiply_by_number(speed / direction.length)
         self.start_coord = np.array(start_coord)
         self.coord = np.array(start_coord)
         self.prev_coord = self.coord
@@ -25,33 +25,33 @@ class Bullet:
         self.source = source
         g.BULLETS.append(self)
 
-    def draw(self, lmap, player, surface):
-        self.sprite.draw(lmap, player, surface)
-
     def update(self):
-        self.prev_coord = self.coord
+        self.prev_coord = np.array(list(self.coord))
         self.coord[0] += self.velocity.x / FPS
         self.coord[1] += self.velocity.y / FPS
         self.sprite.move(self.coord)
 
-        if Vector(self.coord - self.start_coord).length >= self.trajectory_vector.length:
-            expl(self.prev_coord)
-            g.BULLETS.remove(self)
-            del self
-            return
-        elif self.check_enemy_collision():
-            if self.source == "player":
-                self.enemy.hp -= BULLET_DAMAGE
-            expl(self.prev_coord)
-            g.BULLETS.remove(self)
-            del self
-            return
         if self.source == "enemy":
             if self.check_player_collision(self.player):
                 self.player.hp -= BULLET_DAMAGE
                 g.BULLETS.remove(self)
                 del self
                 return
+
+        if self.check_enemy_collision():
+            if self.source == "player":
+                self.enemy.hp -= BULLET_DAMAGE
+            expl(self.prev_coord)
+            g.BULLETS.remove(self)
+            del self
+            return
+            
+        elif Vector(self.coord - self.start_coord).length >= self.trajectory_vector.length:
+            expl(self.prev_coord)
+            g.BULLETS.remove(self)
+            del self
+            return
+
 
     def check_enemy_collision(self):
         hit = False
@@ -75,3 +75,19 @@ class Bullet:
         else:
             return False
 
+class Elf_arrow(Bullet):
+    def __init__(self, start_coord, direction, speed, player):
+        super().__init__(start_coord, direction, speed, player, "enemy")
+        self.sprite = Sprite(self.coord, arrow, [3, 48], 2, 50)
+    
+    def draw(self, lmap, player, surface):
+        Beam(lmap, self.coord, self.velocity.convert_to_angle(), mag(self.coord - self.prev_coord), 0, 500, 2, 0.1)
+        self.sprite.draw(lmap, player, surface)
+
+class Fireball(Bullet):
+    def __init__(self, start_coord, direction, speed, player):
+        super().__init__(start_coord, direction, speed, player, "player")
+        self.sprite = Sprite(self.coord, fireball, [12, 48], 2, 50)
+    
+    def draw(self, lmap, player, surface):
+        self.sprite.draw(lmap, player, surface)

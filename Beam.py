@@ -4,7 +4,7 @@ from Global import *
 from Math.Ray import *
 
 class Beam:
-    def __init__(self, lmap, coord_1, ang, length, height, thickness, qual):
+    def __init__(self, lmap, coord_1, ang, length, height, thickness, qual, lifetime=0.2, color="cyan"):
         self.coord_1 = np.array(coord_1)
         self.ang = ang
         self.length = length
@@ -12,6 +12,8 @@ class Beam:
         self.qual = qual
         self.height = height
         self.timer = 0
+        self.lifetime = lifetime
+        self.color = color
         # checking if the beam hits a wall
         hor_vec, ver_vec, hor_cell, ver_cell = ray(lmap, self.coord_1, self.ang)
         if min(mag(hor_vec), mag(ver_vec)) < self.length:
@@ -50,19 +52,22 @@ class Beam:
                 offset2 += 2 * np.pi
             if np.abs(offset1) < fov_rad / 2 + 1 and np.abs(offset2) < fov_rad / 2 + 1 and (
                     Visible[i] and Visible[i + 1]):
-                pg.draw.line(surface, "CYAN",
+                pg.draw.line(surface, self.color,
                              [width / 2 + offset1 * scale, height / 2 + (self.height * scale / Dist[i]) / np.cos(offset1)],
                              [width / 2 + offset2 * scale, height / 2 + (self.height * scale / Dist[i + 1]) / np.cos(offset2)],
                              int(self.thickness * 2 / (Dist[i] + Dist[i + 1]) / np.cos(offset1 / 2 + offset2 / 2) / (
                                          self.timer * 10 + 1)) + 1)
                 if i == 0:
-                    pg.draw.circle(surface, "CYAN", [width / 2 + offset1 * scale,
+                    pg.draw.circle(surface, self.color, [width / 2 + offset1 * scale,
                                                      height / 2 + (self.height * scale / Dist[0]) / np.cos(offset1)],
                                    int(self.thickness / Dist[0] / 2 / np.cos(offset1) / (self.timer * 10 + 1)) + 1)
                 elif i == self.qual - 2:
-                    pg.draw.circle(surface, "CYAN", [width / 2 + offset2 * scale,
+                    pg.draw.circle(surface, self.color, [width / 2 + offset2 * scale,
                                                      height / 2 + (self.height * scale / Dist[self.qual - 1]) / np.cos(
                                                          offset2)],
                                    int(self.thickness / Dist[self.qual - 1] / 2 / np.cos(offset2) / (
                                                self.timer * 10 + 1)) + 1)
         self.timer += 1 / FPS
+        if self.timer > self.lifetime:
+            BEAMS.remove(self)
+            del self

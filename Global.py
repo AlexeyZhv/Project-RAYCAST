@@ -35,6 +35,7 @@ ohno = pg.image.load("./sprites/ohno.png")
 target = pg.image.load("./sprites/target.png")
 ork = pg.image.load("./sprites/enemies/ork.png")
 grad = pg.image.load("./sprites/grad.png")
+arrow = pg.image.load("./sprites/arrow.png")
 grad_surf = pg.surface.Surface(grad.get_size(), pg.SRCALPHA)
 grad_surf.blit(grad, [0, 0])
 
@@ -69,7 +70,7 @@ ENEMIES = []
 # methods
 
 def rotate(vec, ang):
-    return np.dot(vec, [[np.cos(ang), np.sin(ang)], [-np.sin(ang), np.cos(ang)]])
+    return np.dot(np.array(vec), [[np.cos(ang), np.sin(ang)], [-np.sin(ang), np.cos(ang)]])
 
 
 def mag(vec):
