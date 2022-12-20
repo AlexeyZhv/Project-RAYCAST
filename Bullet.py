@@ -33,7 +33,8 @@ class Bullet:
 
         if self.source == "enemy":
             if self.check_player_collision(self.player):
-                self.player.hp -= BULLET_DAMAGE
+                if not self.player.SHIELDED:
+                    self.player.hp -= BULLET_DAMAGE
                 g.BULLETS.remove(self)
                 del self
                 return
@@ -45,7 +46,7 @@ class Bullet:
             g.BULLETS.remove(self)
             del self
             return
-            
+
         elif Vector(self.coord - self.start_coord).length >= self.trajectory_vector.length:
             expl(self.prev_coord)
             g.BULLETS.remove(self)

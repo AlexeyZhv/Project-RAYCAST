@@ -17,9 +17,11 @@ from random import random
 
 obs = Player([130, 104], 3 * np.pi / 2, 200, 2, 24)
 PISTOL = Pistol(obs)
-SHOTGUN = Shotgun(obs)
+SWORD = Sword(obs)
+SHIELD = Shield(obs)
+#SHOTGUN = Shotgun(obs)
 selected_weapon = 0
-WEAPONS = [PISTOL, SHOTGUN]
+WEAPONS = [SWORD, SHIELD]
 OBJECTS = []
 
 
@@ -67,11 +69,6 @@ while not g.finished:
                     MODE = "Map"
                 else:
                     MODE = "3D"
-            if event.key == pg.K_TAB:
-                WEAPONS[selected_weapon].weapon.state = 0
-                selected_weapon += 1
-                if selected_weapon >= len(WEAPONS):
-                    selected_weapon = 0
             if event.key == pg.K_e:
                 interacting = True
             if event.key == pg.K_ESCAPE:
@@ -80,6 +77,15 @@ while not g.finished:
             left, middle, right = pg.mouse.get_pressed()
             if left:
                 shooting = True
+
+    left, middle, right = pg.mouse.get_pressed()
+    trigger_pressed = right
+
+    #Changing weapons
+    if WEAPONS[0].state == "ready" and trigger_pressed:
+        selected_weapon = 1
+    elif WEAPONS[1].state == "ready" and shooting:
+        selected_weapon = 0
 
     if MODE == "3D":
         obs.ang += mouse_control()
@@ -243,7 +249,7 @@ while not g.finished:
                 texdraw(screen, ver_cell[1], TEXTURES[ver_cell[0]], wall_height / mag(ver_vec) / np.cos(offset) * scale,
                         [(offset + fov_rad / 2) * scale, height / 2], int(width / g.rays_number) + 1, 0.3)
 
-    # Code for the laser shotgun
+    # Shooting weapons
     if MODE == "3D":
         WEAPONS[selected_weapon].shoot(Level)
     
@@ -288,6 +294,7 @@ while not g.finished:
             obj.draw(Level, obs, screen)
         WEAPONS[selected_weapon].draw(screen, shooting, trigger_pressed)
 
+    #screen.blit(swordsman_idle_surface, [0, 0])
     screen.blit(grad_surf, [0, 0])
     pg.display.update()
 
