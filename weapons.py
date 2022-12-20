@@ -23,7 +23,7 @@ for i in range(0, 8):
     surface.blit(pg.image.load(f"sprites/Pistol/{i}.png"), [0, 24])
     Pistol_tex.append(surface)
 
-for i in range(0, 8):
+for i in range(0, 11):
     surface = pg.surface.Surface([width, height], pg.SRCALPHA)
     surface.blit(pg.transform.scale(pg.image.load(f"./sprites/characters/swordsman/attack/swordsman_attack_{i}.png"), [width, height]), [0, 0])
     Sword_tex.append(surface)
@@ -112,7 +112,7 @@ class Pistol(Primary):
 
 class Sword(Primary):
     def __init__(self, player) -> None:
-        super().__init__(player, Sword_tex, 0.8, 0.8)
+        super().__init__(player, Sword_tex, 1.1, 1.1)
     def shoot(self, lmap):
         if self.state == "attacking" and not self.attacked:
             if self.timer > 0.3:
