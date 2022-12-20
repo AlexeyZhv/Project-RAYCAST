@@ -190,9 +190,9 @@ while not g.finished:
     for i in range(lw):
         for j in range(lw):
             if (Level[j][i] > 0) and obs.collision(i, j, alpha)[0]:
+                print(obs.collision(i, j, alpha)[0], obs.collision(i, j, alpha)[2], obs.collision(i, j, alpha)[3])
                 pcol = "YELLOW"
                 if obs.collision(i, j, alpha)[1]:
-                    move = False
                     pcol = "RED"
 
     keys = pg.key.get_pressed()
@@ -202,7 +202,7 @@ while not g.finished:
         obs.rotate(-1)
 
     if move:
-        obs.move(alpha)
+        obs.move(alpha, Level)
 
     if MODE == "3D":
         #Drawing floor and ceil
