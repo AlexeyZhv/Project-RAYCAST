@@ -23,10 +23,10 @@ WEAPONS = [PISTOL, SHOTGUN]
 OBJECTS = []
 
 
-Archer([896 - 512, 896])
-#Ork([896 - 128, 896])
-#Ork([128, 896])
-#Ork([256, 896])
+#Elf([896 - 512, 896])
+Ork([896 - 128, 896])
+Ork([128, 896])
+Ork([256, 896])
 
 def new_texture(size):
     a = []
@@ -190,7 +190,7 @@ while not g.finished:
     for i in range(lw):
         for j in range(lw):
             if (Level[j][i] > 0) and obs.collision(i, j, alpha)[0]:
-                print(obs.collision(i, j, alpha)[0], obs.collision(i, j, alpha)[2], obs.collision(i, j, alpha)[3])
+                #print(obs.collision(i, j, alpha)[0], obs.collision(i, j, alpha)[2], obs.collision(i, j, alpha)[3])
                 pcol = "YELLOW"
                 if obs.collision(i, j, alpha)[1]:
                     pcol = "RED"

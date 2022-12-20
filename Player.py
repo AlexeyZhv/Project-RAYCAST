@@ -20,8 +20,20 @@ class Player:
     def move(self, angle, lmap):
         self.coord = self.coord + self.spd / FPS * rotate([1, 0], angle)
 
-        self.i = self.coord[0] // 64
-        self.j = self.coord[1] // 64
+        self.i = int(self.coord[0] / 64)
+        self.j = int(self.coord[1] / 64)
+        
+        i1 = int((self.coord[0] - 2 * self.spd / FPS) / 64)
+        i2 = int((self.coord[0] - 2 * self.spd / FPS) / 64)
+        i3 = int((self.coord[0] + 2 * self.spd / FPS) / 64)
+        i4 = int((self.coord[0] + 2 * self.spd / FPS) / 64)
+        j1 = int((self.coord[1] - 2 * self.spd / FPS) / 64)
+        j2 = int((self.coord[1] + 2 * self.spd / FPS) / 64)
+        j3 = int((self.coord[1] - 2 * self.spd / FPS) / 64)
+        j4 = int((self.coord[1] + 2 * self.spd / FPS) / 64)
+
+        checksum = round(np.sign(Level[j1][i1]) + np.sign(Level[j2][i2]) + np.sign(Level[j3][i3]) + np.sign(Level[j4][i4]))
+
         self.coord_inside = [self.coord[0] % 64, self.coord[1] % 64]
 
         self.vector_spd = self.vector_spd.set_by_angle(self.ang).multiply_by_number(self.spd)
@@ -58,7 +70,7 @@ class Player:
             if col[3]:
                 self.is_hor_wall_collision = True
 
-        if self.is_ver_wall_collision:
+        if self.is_ver_wall_collision or checksum == 1 or checksum == 3:
             if self.coord_inside[0] <= 2 * self.spd / FPS:
                 self.coord[0] = 64 * self.i + 2 * self.spd / FPS
             else:

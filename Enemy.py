@@ -110,7 +110,7 @@ class Ork(Enemy):
                 player.hp -= 1
 
 
-class Archer(Enemy):
+class Elf(Enemy):
 
     def __init__(self, coord):
         super().__init__(coord, [24, 48], 100, 1, target)
@@ -126,8 +126,8 @@ class Archer(Enemy):
         pass
 
     def attack(self, player, lmap):
-
-        vect = Vector(player.coord - self.coord)
+        vect_list = list(player.coord - self.coord)
+        vect = Vector(vect_list)
         hor_vec, ver_vec, trash, trash = ray(lmap, self.coord, vect.convert_to_angle())
         vec = min([hor_vec, ver_vec], key=mag)
         l_ray = mag(vec)
