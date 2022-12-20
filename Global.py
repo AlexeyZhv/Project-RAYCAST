@@ -28,6 +28,8 @@ SETTINGS = False
 PAUSED = False
 MENU = True
 DIED = False
+VICTORY = False
+game_ended = False
 
 BULLET_DAMAGE = 1
 

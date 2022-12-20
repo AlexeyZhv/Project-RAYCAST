@@ -26,10 +26,10 @@ OBJECTS = []
 
 
 Elf([896, 896])
-Ork([896 - 128, 896])
-Ork([128, 896])
-Ork([256, 896])
-Elf([64 * 6, 64 * 6])
+#Ork([896 - 128, 896])
+#Ork([128, 896])
+#Ork([256, 896])
+#Elf([64 * 6, 64 * 6])
 
 def new_texture(size):
     a = []
@@ -56,10 +56,19 @@ while not g.finished:
     fps_label = font.render(f"FPS: {int(clock.get_fps())}", True, "RED")
     hp_label = font.render(f"HEALTH: {int(obs.hp)}", True, "RED")
 
+    if obs.hp <= 0:
+        g.DIED = True
+    if len(g.ENEMIES) <= 0:
+        g.VICTORY = True
+
     settings_menu()
     main_menu()
     pause_menu()
     die_menu()
+    victory_menu()
+
+    if len(g.ENEMIES) <= 0:
+        g.game_ended = True
 
     #Checking main controls
     for event in pg.event.get():
@@ -303,9 +312,6 @@ while not g.finished:
 
     #screen.blit(swordsman_idle_surface, [0, 0])
     screen.blit(grad_surf, [0, 0])
-
-    if obs.hp <= 0:
-        g.DIED = True
     pg.display.update()
 
 pg.quit()
