@@ -55,7 +55,7 @@ class Enemy:
 
 class Ork(Enemy):
     def __init__(self, coord) -> None:
-        super().__init__(coord, [48, 48], 100, 1, ork)
+        super().__init__(coord, [48, 48], 100, 2, ork)
         self.state = "running"
         self.attacked = False
     
